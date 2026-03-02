@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auracelle Orion v3 · E-AGCO-HT v2.0 · Scientific Instrument Edition</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  /* DOE / National Lab palette — clean light-field scientific instrument */
+  --bg-page:   #f5f6f8;
+  --bg-panel:  #ffffff;
+  --bg-card:   #f8f9fb;
+  --bg-header: #1a2535;
+  --bg-nav:    #222f42;
+
+  --border:    #dde2ea;
+  --border-md: #c4ccd8;
+  --border-dk: #a8b4c4;
+
+  --text-h:    #0e1825;
+  --text-body: #2c3a4a;
+  --text-mid:  #5a6a7e;
+  --text-dim:  #8a9bae;
+
+  --ink-mono:  #1e3a5f;
+
+  /* Domain / status palette */
+  --ifd:       #005a9e;  /* Infrastructure — DOE blue */
+  --ifd-bg:    #eaf2fb;
+  --swd:       #267350;  /* Software — forest */
+  --swd-bg:    #eaf5ef;
+  --sctl:      #b05000;  /* Supply Chain — amber-brown */
+  --sctl-bg:   #fdf2e8;
+  --gov:       #6b3fa0;  /* Governance — institutional purple */
+  --gov-bg:    #f3eefa;
+
+  --crit:      #c0392b;
+  --high:      #d4680a;
+  --med:       #b88a00;
+  --low:       #267350;
+  --ok:        #1a6b3c;
+
+  --accent:    #005a9e;  /* Primary call-to-action */
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.10);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { font-size: 14px; }
+
+body {
+  background: var(--bg-page);
+  color: var(--text-body);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ──────────────── HEADER ──────────────── */
+.hdr {
+  height: 56px;
+  background: var(--bg-header);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.hdr-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hdr-orion-mark {
+  width: 32px; height: 32px;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.hdr-orion-mark::before,
+.hdr-orion-mark::after {
+  content: '';
+  position: absolute;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #90c8f0;
+}
+.hdr-orion-mark::before { left: 5px; }
+.hdr-orion-mark::after  { right: 5px; }
+
+.hdr-mark-center {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #b8e6b8;
+}
+
+.hdr-title {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.hdr-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.06em;
+  margin-top: 1px;
+}
+
+.hdr-sep { width: 1px; height: 28px; background: rgba(255,255,255,0.15); }
+
+.hdr-badges { display: flex; gap: 8px; align-items: center; }
+
+.hdr-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  border: 1px solid;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+}
+.hdr-badge.live   { border-color: #ff8080; color: #ff8080; }
+.hdr-badge.sctl   { border-color: #ffb060; color: #ffb060; }
+.hdr-badge.ver    { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.55); }
+
+.hdr-spacer { flex: 1; }
+
+.hdr-clock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.55);
+}
+.hdr-clock b { color: #90c8f0; }
+
+/* ──────────────── SHELL ──────────────── */
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr 280px;
+  height: calc(100vh - 56px);
+}
+
+/* ──────────────── LEFT NAV ──────────────── */
+.lnav {
+  background: var(--bg-nav);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.lnav-section { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+.lnav-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* Scenario cards */
+.sc-card {
+  padding: 10px 12px;
+  border-radius: 4px;
+  border-left: 3px solid var(--scc, rgba(255,255,255,0.15));
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.18s;
+  background: rgba(255,255,255,0.03);
+}
+.sc-card:hover { background: rgba(255,255,255,0.07); }
+.sc-card.active { background: rgba(255,255,255,0.08); }
+
+.sc-card-title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.88);
+  margin-bottom: 2px;
+}
+.sc-card-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.57rem;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.4;
+}
+.sc-card-arch {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--scc, rgba(255,255,255,0.35));
+  margin-top: 5px;
+  letter-spacing: 0.04em;
+}
+
+/* Domain weight sliders */
+.weight-block { margin-bottom: 10px; }
+.weight-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.weight-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.55);
+}
+.weight-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+input[type=range] {
+  width: 100%;
+  height: 3px;
+  appearance: none;
+  background: rgba(255,255,255,0.12);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  width: 11px; height: 11px;
+  border-radius: 2px;
+  background: var(--tc, #90c8f0);
+  cursor: pointer;
+}
+
+/* Lambda coupling */
+.coupling-display {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 3px;
+  padding: 8px 10px;
+  margin-top: 8px;
+}
+.coupling-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 4px;
+}
+.coupling-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #ffb060;
+}
+
+/* Wargame scores */
+.score-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 2px;
+}
+.score-box {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 3px;
+  padding: 8px;
+  text-align: center;
+}
+.score-num {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.score-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52rem;
+  color: rgba(255,255,255,0.35);
+  margin-top: 3px;
+  letter-spacing: 0.08em;
+}
+
+/* ──────────────── MAIN CANVAS ──────────────── */
+.canvas {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-page);
+  overflow: hidden;
+}
+
+.canvas-tabs {
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  padding: 0 20px;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+.canvas-tabs::-webkit-scrollbar { display: none; }
+
+.ctab {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 12px 16px;
+  color: var(--text-mid);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.18s;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+.ctab:hover { color: var(--text-body); }
+.ctab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+.cbody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ──────────────── TYPOGRAPHY ──────────────── */
+.section-h {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-h);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-h .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-left: auto;
+}
+
+.prose {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+/* ──────────────── CARDS ──────────────── */
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--text-h);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.card-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.card-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.card-4col { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 14px; }
+
+/* ──────────────── DOMAIN BADGES ──────────────── */
+.domain-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.db-ifd  { background: var(--ifd-bg);  color: var(--ifd);  border: 1px solid #bcd6ef; }
+.db-swd  { background: var(--swd-bg);  color: var(--swd);  border: 1px solid #b0d8c0; }
+.db-sctl { background: var(--sctl-bg); color: var(--sctl); border: 1px solid #f0c898; }
+.db-gov  { background: var(--gov-bg);  color: var(--gov);  border: 1px solid #cdb8e8; }
+
+/* ──────────────── MATH BLOCKS ──────────────── */
+.math-box {
+  background: #f0f4f8;
+  border: 1px solid var(--border-md);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  line-height: 2;
+}
+.math-box .ml {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-family: 'DM Sans', sans-serif;
+}
+.math-eq { color: var(--ink-mono); }
+.mv  { color: var(--ifd); font-weight: 500; }
+.msw { color: var(--swd); font-weight: 500; }
+.msc { color: var(--sctl); font-weight: 500; }
+.mg  { color: var(--gov); font-weight: 500; }
+.mh  { color: var(--crit); font-weight: 600; }
+
+/* ──────────────── PROPAGATION MAP ──────────────── */
+.domain-section {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-sm);
+}
+.domain-header {
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.domain-name {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+.domain-desc {
+  font-size: 0.7rem;
+  color: var(--text-mid);
+  margin-left: auto;
+}
+.domain-body {
+  padding: 12px 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Node cards */
+.node-c {
+  width: 120px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  background: var(--bg-card);
+  transition: all 0.18s;
+  flex-shrink: 0;
+  position: relative;
+}
+.node-c:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+.node-c.CRIT { border-color: var(--crit); background: #fdf0ef; }
+.node-c.HIGH { border-color: var(--high); background: #fef4ec; }
+.node-c.MED  { border-color: var(--med);  background: #fdfaec; }
+.node-c.CLEAN { border-color: #b8dfc8; background: #f0faf5; }
+.node-c.UNK  { opacity: 0.55; }
+
+.node-domain-stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 4px 4px 0 0;
+}
+
+.node-icon { font-size: 1.1rem; margin-bottom: 5px; display: block; margin-top: 3px; }
+.node-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.67rem;
+  font-weight: 600;
+  color: var(--text-h);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.node-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.node-c.CRIT .node-status { color: var(--crit); }
+.node-c.HIGH .node-status { color: var(--high); }
+.node-c.MED  .node-status { color: var(--med); }
+.node-c.CLEAN .node-status { color: var(--ok); }
+.node-c.UNK  .node-status { color: var(--text-dim); }
+
+.node-sbom {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.54rem;
+  margin-top: 4px;
+  color: var(--text-dim);
+}
+
+/* ──────────────── STATUS TABLE ──────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+.data-table th {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-mid);
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border-md);
+  text-align: left;
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.data-table tr:hover td { background: var(--bg-card); }
+.data-table tr:last-child td { border-bottom: none; }
+
+/* Risk badges */
+.rbadge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.rb-crit { background: #fde8e7; color: var(--crit); border: 1px solid #f5c0be; }
+.rb-high { background: #feeee0; color: var(--high); border: 1px solid #f5c898; }
+.rb-med  { background: #fef9e0; color: var(--med);  border: 1px solid #f5e090; }
+.rb-low  { background: #eaf5ee; color: var(--ok);   border: 1px solid #b8ddc8; }
+
+/* ──────────────── METRIC BARS ──────────────── */
+.mbk { margin-bottom: 9px; }
+.mbk-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+.mbk-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-mid); }
+.mbk-value { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; }
+.mbk-bar { height: 5px; background: #e8edf4; border-radius: 3px; overflow: hidden; }
+.mbk-fill { height: 100%; border-radius: 3px; transition: width 0.9s ease; }
+
+/* ──────────────── GOVERNANCE GAUGE ──────────────── */
+.gov-gauge-wrap {
+  text-align: center;
+  padding: 12px 0 8px;
+}
+.gov-number {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1;
+}
+.gov-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-top: 3px;
+}
+.gov-status {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+/* ──────────────── SCTI RING ──────────────── */
+.scti-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+}
+.scti-ring { width: 60px; height: 60px; flex-shrink: 0; position: relative; }
+.scti-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.scti-text {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sctl);
+}
+.scti-info { flex: 1; }
+.scti-title { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--sctl); font-weight: 600; margin-bottom: 3px; }
+.scti-sub { font-size: 0.68rem; color: var(--text-mid); line-height: 1.4; }
+
+/* ──────────────── DOCUMENT UPLOAD SECTION ──────────────── */
+.upload-zone {
+  border: 2px dashed var(--border-md);
+  border-radius: 6px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg-card);
+  margin-bottom: 14px;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--accent);
+  background: var(--ifd-bg);
+}
+.upload-icon { font-size: 2rem; margin-bottom: 10px; }
+.upload-title {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-h);
+  margin-bottom: 5px;
+}
+.upload-sub {
+  font-size: 0.75rem;
+  color: var(--text-mid);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.upload-btn {
+  display: inline-block;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  padding: 7px 18px;
+  background: var(--accent);
+  color: white;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s;
+  letter-spacing: 0.02em;
+}
+.upload-btn:hover { background: #004a88; }
+
+input[type=file] { display: none; }
+
+.doc-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.doc-type-chip {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 10px;
+  cursor: pointer;
+  background: var(--bg-card);
+  transition: all 0.18s;
+  text-align: center;
+}
+.doc-type-chip:hover { border-color: var(--accent); background: var(--ifd-bg); }
+.doc-type-chip.selected { border-color: var(--accent); background: var(--ifd-bg); }
+.doc-type-icon { font-size: 1.1rem; margin-bottom: 4px; display: block; }
+.doc-type-name { font-weight: 600; font-size: 0.7rem; color: var(--text-h); margin-bottom: 2px; }
+.doc-type-desc { font-size: 0.62rem; color: var(--text-dim); line-height: 1.3; }
+
+.uploaded-list { margin-bottom: 14px; }
+.uploaded-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+.uploaded-icon { font-size: 1rem; flex-shrink: 0; }
+.uploaded-name { font-weight: 600; font-size: 0.75rem; color: var(--text-h); flex: 1; }
+.uploaded-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); }
+.uploaded-status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-analyzing { background: var(--med); animation: blink 1.2s ease infinite; }
+.dot-ready     { background: var(--ok); }
+.dot-error     { background: var(--crit); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.analysis-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.analysis-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.analysis-doc-name {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-h);
+  flex: 1;
+}
+.analysis-type-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.finding-row {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.finding-row:last-child { border-bottom: none; }
+.finding-domain { width: 80px; flex-shrink: 0; margin-top: 1px; }
+.finding-text { font-size: 0.75rem; color: var(--text-body); line-height: 1.5; flex: 1; }
+.finding-metric { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; min-width: 50px; text-align: right; flex-shrink: 0; margin-top: 1px; }
+
+/* ──────────────── TIMELINE ──────────────── */
+.tline { padding-left: 28px; position: relative; }
+.tline::before {
+  content: '';
+  position: absolute;
+  left: 7px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--crit), var(--high), var(--border));
+}
+.tev {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 11px 14px;
+  margin-bottom: 10px;
+  background: var(--bg-panel);
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: var(--shadow-sm);
+}
+.tev::before {
+  content: '';
+  position: absolute;
+  left: -23px; top: 13px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--tdc, var(--accent));
+  border: 2px solid var(--bg-page);
+}
+.tev:hover { box-shadow: var(--shadow-md); }
+.tev-time { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); margin-bottom: 3px; }
+.tev-h { font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 0.85rem; color: var(--text-h); margin-bottom: 5px; }
+.tev-body { font-size: 0.74rem; color: var(--text-mid); line-height: 1.55; }
+.tev-chain { margin-top: 8px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.tev-marl { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--gov); margin-top: 6px; }
+
+/* Chain nodes */
+.cn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  padding: 2px 7px;
+  border-radius: 2px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.cn-ifd  { border-color: var(--ifd);  color: var(--ifd);  background: var(--ifd-bg); }
+.cn-swd  { border-color: var(--swd);  color: var(--swd);  background: var(--swd-bg); }
+.cn-sctl { border-color: var(--sctl); color: var(--sctl); background: var(--sctl-bg); }
+.cn-crit { border-color: var(--crit); color: var(--crit); background: #fde8e7; }
+.cn-arr  { color: var(--text-dim); font-size: 0.65rem; }
+
+/* ──────────────── IR LANES ──────────────── */
+.lanes-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 14px; }
+.lane-card {
+  border: 1px solid var(--lc, var(--border));
+  border-top: 3px solid var(--lc, var(--border));
+  border-radius: 5px;
+  background: var(--bg-panel);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.lane-hdr {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.lane-hdr-name {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--lc, var(--text-h));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.lane-body { padding: 10px 12px; }
+.pstep {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.pstep-chk {
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--lc, var(--border));
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  transition: all 0.18s;
+  color: transparent;
+}
+.pstep-chk.done { background: var(--lc); color: white; border-color: var(--lc); }
+.pstep-txt { font-size: 0.7rem; color: var(--text-mid); line-height: 1.4; }
+.pstep-sc  { font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; color: var(--sctl); margin-top: 2px; }
+
+/* ──────────────── NC3 GRID ──────────────── */
+.nc3-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 14px; }
+.nc3c {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 12px;
+  background: var(--bg-panel);
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: var(--shadow-sm);
+}
+.nc3c:hover { box-shadow: var(--shadow-md); }
+.nc3c.trig { border-color: var(--crit); background: #fdf0ef; }
+.nc3c.warn { border-color: var(--high); background: #fef4ec; }
+.nc3c.ok   { border-color: #b8dfc8; background: #f0faf5; }
+.nc3c-icon { font-size: 1.2rem; margin-bottom: 6px; }
+.nc3c-title { font-weight: 700; font-size: 0.78rem; color: var(--text-h); margin-bottom: 4px; }
+.nc3c.trig .nc3c-title { color: var(--crit); }
+.nc3c.warn .nc3c-title { color: var(--high); }
+.nc3c.ok   .nc3c-title { color: var(--ok); }
+.nc3c-desc { font-size: 0.7rem; color: var(--text-mid); line-height: 1.4; }
+.nc3c-badge {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.56rem;
+  padding: 2px 7px;
+  border-radius: 2px;
+  border: 1px solid;
+  letter-spacing: 0.05em;
+}
+.nc3c.trig .nc3c-badge { border-color: var(--crit); color: var(--crit); background: #fde8e7; }
+.nc3c.warn .nc3c-badge { border-color: var(--high); color: var(--high); background: #feeee0; }
+.nc3c.ok   .nc3c-badge { border-color: var(--ok); color: var(--ok); background: #eaf5ee; }
+
+/* ──────────────── POLICY STRESS TAB ──────────────── */
+.policy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.policy-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.policy-title {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-h);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cultural-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.cultural-row:last-child { border-bottom: none; }
+.cr-country { font-weight: 600; font-size: 0.72rem; color: var(--text-h); width: 90px; flex-shrink: 0; }
+.cr-bar-outer { flex: 1; height: 8px; background: #e8edf4; border-radius: 3px; overflow: hidden; }
+.cr-bar-fill  { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+.cr-score { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 600; width: 35px; text-align: right; }
+.cr-tag   { font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; width: 55px; text-align: right; flex-shrink: 0; }
+
+.misinfo-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.misinfo-indicator:last-child { border-bottom: none; }
+.mi-label { font-size: 0.72rem; color: var(--text-body); flex: 1; }
+.mi-score { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; }
+.mi-trend { font-size: 0.72rem; width: 16px; text-align: center; }
+
+.win-win-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 10px; }
+.ww-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 11px;
+  text-align: center;
+}
+.ww-icon { font-size: 1.2rem; margin-bottom: 5px; }
+.ww-title { font-weight: 700; font-size: 0.7rem; color: var(--text-h); margin-bottom: 4px; }
+.ww-desc  { font-size: 0.65rem; color: var(--text-dim); line-height: 1.4; }
+
+/* ──────────────── RIGHT PANEL ──────────────── */
+.rpanel {
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.rsec { padding: 14px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.rsec-title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: var(--text-h);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+/* ──────────────── SIM CONTROLS ──────────────── */
+.simbar {
+  height: 48px;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  flex-shrink: 0;
+  box-shadow: 0 -1px 4px rgba(0,0,0,0.06);
+}
+.sbtn {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 6px 14px;
+  border: 1px solid;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.18s;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.sbtn.primary  { border-color: var(--accent); color: var(--accent); }
+.sbtn.primary:hover  { background: var(--ifd-bg); }
+.sbtn.danger   { border-color: var(--crit); color: var(--crit); }
+.sbtn.danger:hover   { background: #fde8e7; }
+.sbtn.sctl     { border-color: var(--sctl); color: var(--sctl); }
+.sbtn.sctl:hover     { background: var(--sctl-bg); }
+.sbtn.success  { border-color: var(--ok); color: var(--ok); }
+.sbtn.success:hover  { background: var(--swd-bg); }
+.sbtn.neutral  { border-color: var(--border-md); color: var(--text-mid); }
+.sbtn.neutral:hover  { background: var(--bg-card); }
+.sim-info {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+.sim-info b { color: var(--accent); }
+
+/* ──────────────── FEED ──────────────── */
+.afeed { flex: 1; overflow-y: auto; padding: 8px 14px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.aline {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid #f0f2f6;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  align-items: flex-start;
+}
+.al-time { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--text-dim); min-width: 48px; padding-top: 1px; }
+.al-tag  { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 600; min-width: 38px; padding-top: 1px; }
+.al-tag.CRIT { color: var(--crit); }
+.al-tag.WARN { color: var(--high); }
+.al-tag.INFO { color: var(--accent); }
+.al-tag.SBOM { color: var(--sctl); }
+.al-tag.MARL { color: var(--gov); }
+.al-tag.OK   { color: var(--ok); }
+.al-msg { color: var(--text-mid); flex: 1; }
+
+/* ──────────────── MODAL ──────────────── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,20,35,0.6);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-md);
+  border-radius: 6px;
+  padding: 24px 26px;
+  max-width: 520px;
+  width: 92%;
+  box-shadow: var(--shadow-lg);
+}
+.modal-title {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-h);
+  margin-bottom: 10px;
+}
+.modal-body { font-size: 0.78rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 16px; }
+.modal-mets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.modal-met { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px; }
+.mm-l { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--text-dim); margin-bottom: 2px; }
+.mm-v { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); font-weight: 600; }
+.modal-close {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  padding: 7px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--accent);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.modal-close:hover { background: var(--ifd-bg); }
+
+/* ──────────────── SCROLLBAR ──────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 3px; }
+
+/* NOF-C Registry */
+.nof-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.nof-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 10px; }
+.nof-zone { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.nof-code { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; color: var(--accent); margin-bottom: 2px; }
+.nof-name { font-size: 0.68rem; color: var(--text-body); line-height: 1.3; }
+.nof-obs  { font-size: 0.62rem; color: var(--text-dim); margin-top: 4px; line-height: 1.3; }
+
+/* Tooltip */
+.ht { position: fixed; background: var(--bg-header); border: 1px solid rgba(255,255,255,0.15); border-radius: 4px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: rgba(255,255,255,0.9); pointer-events: none; z-index: 5000; display: none; max-width: 220px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<!-- Tooltip -->
+<div class="ht" id="tt"></div>
+<!-- Modal -->
+<div class="overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-title" id="m-title"></div>
+    <div class="modal-body"  id="m-body"></div>
+    <div class="modal-mets"  id="m-mets"></div>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- Hidden file input -->
+<input type="file" id="fileInput" accept=".pdf,.docx,.doc,.txt,.xlsx,.pptx,.json,.csv" multiple onchange="handleFiles(this.files)">
+
+<!-- ═══ HEADER ═══ -->
+<div class="hdr">
+  <div class="hdr-logo">
+    <div class="hdr-orion-mark"><div class="hdr-mark-center"></div></div>
+    <div>
+      <div class="hdr-title">Auracelle Orion · E-AGCO-HT v2.0</div>
+      <div class="hdr-sub">CYBER DISRUPTION & ESCALATION SANDBOX · DOMAIN-PARTITIONED ARCHITECTURE</div>
+    </div>
+  </div>
+  <div class="hdr-sep"></div>
+  <div class="hdr-badges">
+    <div class="hdr-badge live">● SIMULATION ACTIVE</div>
+    <div class="hdr-badge sctl">SCTL CRITICAL</div>
+    <div class="hdr-badge ver">E-AGCO-HT v2.0 · Evans 2026</div>
+  </div>
+  <div class="hdr-spacer"></div>
+  <div class="hdr-clock">T+ <b id="hclock">06:00</b> &nbsp;·&nbsp; TICK <b id="htick">036</b> &nbsp;·&nbsp; <span style="color:rgba(255,255,255,0.35)">Auracelle AI Governance Labs</span></div>
+</div>
+
+<!-- ═══ SHELL ═══ -->
+<div class="shell">
+
+<!-- ═══ LEFT NAV ═══ -->
+<div class="lnav">
+
+  <div class="lnav-section">
+    <div class="lnav-label">Scenario Archetypes</div>
+    <div class="sc-card active" style="--scc:#ff8080" onclick="loadScenario(0,this)">
+      <div class="sc-card-title">MIRAGE CHAIN</div>
+      <div class="sc-card-meta">Software SC compromise → ICS/OT cascade (SolarWinds-class)</div>
+      <div class="sc-card-arch">w_IFD=0.25 · w_SWD=0.40 · λ=0.15</div>
+    </div>
+    <div class="sc-card" style="--scc:#ffb060" onclick="loadScenario(1,this)">
+      <div class="sc-card-title">IRONCLAD SIEGE</div>
+      <div class="sc-card-meta">OT/ICS targeted — grey-market firmware (Industroyer-class)</div>
+      <div class="sc-card-arch">w_IFD=0.55 · w_SWD=0.20 · λ=0.10</div>
+    </div>
+    <div class="sc-card" style="--scc:#90c8f0" onclick="loadScenario(2,this)">
+      <div class="sc-card-title">FRACTURE POINT</div>
+      <div class="sc-card-meta">Cloud-native dependency poisoning (XZ-class)</div>
+      <div class="sc-card-arch">w_IFD=0.15 · w_SWD=0.50 · λ=0.05</div>
+    </div>
+    <div class="sc-card" style="--scc:#c8a0e0" onclick="loadScenario(3,this)">
+      <div class="sc-card-title">PHANTOM CIRCUIT</div>
+      <div class="sc-card-meta">Nation-state hardware implant campaign</div>
+      <div class="sc-card-arch">w_IFD=0.40 · w_SWD=0.25 · λ=0.20</div>
+    </div>
+    <div class="sc-card" style="--scc:#80c8a0" onclick="loadScenario(4,this)">
+      <div class="sc-card-title">LOCKDOWN DELTA</div>
+      <div class="sc-card-meta">Critical infrastructure ransomware + SC-PATCH</div>
+      <div class="sc-card-arch">w_IFD=0.45 · w_SWD=0.25 · λ=0.10</div>
+    </div>
+  </div>
+
+  <div class="lnav-section">
+    <div class="lnav-label">Domain Weights (w)</div>
+    <div class="weight-block">
+      <div class="weight-header">
+        <span class="weight-label" style="color:#90c8f0">w_IFD (Infrastructure)</span>
+        <span class="weight-val" style="color:#90c8f0" id="wv-ifd">0.25</span>
+      </div>
+      <input type="range" min="5" max="70" value="25" style="--tc:#90c8f0" id="sl-ifd" oninput="weightChange('ifd',this.value)">
+    </div>
+    <div class="weight-block">
+      <div class="weight-header">
+        <span class="weight-label" style="color:#90d890">w_SWD (Software)</span>
+        <span class="weight-val" style="color:#90d890" id="wv-swd">0.40</span>
+      </div>
+      <input type="range" min="5" max="70" value="40" style="--tc:#90d890" id="sl-swd" oninput="weightChange('swd',this.value)">
+    </div>
+    <div class="weight-block">
+      <div class="weight-header">
+        <span class="weight-label" style="color:#ffb060">w_SC (Supply Chain)</span>
+        <span class="weight-val" style="color:#ffb060" id="wv-sc">0.25</span>
+      </div>
+      <input type="range" min="5" max="50" value="25" style="--tc:#ffb060" id="sl-sc" oninput="weightChange('sc',this.value)">
+    </div>
+    <div class="coupling-display">
+      <div class="coupling-label">λ Cross-Domain Coupling</div>
+      <input type="range" min="5" max="25" value="15" style="--tc:#ffb060;margin-bottom:4px" id="sl-lambda" oninput="weightChange('lambda',this.value)">
+      <div class="coupling-val" id="lambda-val">λ = 0.15</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:rgba(255,255,255,0.3);margin-top:3px">Nonlinear amplification when IFD × SWD both stressed</div>
+    </div>
+  </div>
+
+  <div class="lnav-section">
+    <div class="lnav-label">Wargame Score</div>
+    <div class="score-pair">
+      <div class="score-box">
+        <div class="score-num" style="color:#80c8f8" id="def-s">47</div>
+        <div class="score-lbl">DEFENDER</div>
+      </div>
+      <div class="score-box">
+        <div class="score-num" style="color:#ff8080" id="adv-s">62</div>
+        <div class="score-lbl">ADVERSARY</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end lnav -->
+
+<!-- ═══ MAIN CANVAS ═══ -->
+<div class="canvas">
+  <div class="canvas-tabs">
+    <div class="ctab active" onclick="switchTab('prop',this)">Propagation Map</div>
+    <div class="ctab" onclick="switchTab('sbom',this)">SBOM / SCTL Analysis</div>
+    <div class="ctab" onclick="switchTab('timeline',this)">Escalation Timeline</div>
+    <div class="ctab" onclick="switchTab('lanes',this)">IR Workflow Lanes</div>
+    <div class="ctab" onclick="switchTab('marl',this)">E-AGCO-HT Engine</div>
+    <div class="ctab" onclick="switchTab('policy',this)">Policy Stress Testing</div>
+    <div class="ctab" onclick="switchTab('nof',this)">NOF-C Registry</div>
+    <div class="ctab" onclick="switchTab('docs',this)">📎 Document Analysis</div>
+  </div>
+
+  <div class="cbody">
+
+  <!-- ══════ PROPAGATION MAP ══════ -->
+  <div id="p-prop" class="panel active">
+    <div class="section-h">
+      Adversarial Disruption Propagation — Domain-Partitioned View
+      <span class="tag">SCENARIO: MIRAGE CHAIN · E-AGCO-HT v2.0</span>
+    </div>
+    <p class="prose">The <strong>Infrastructure Domain (IFD)</strong> and <strong>Software Domain (SWD)</strong> are modeled as structurally distinct propagation spaces. The <strong>Supply-Chain Trust Layer (SCTL)</strong> connects them as a first-class channel. Cross-domain propagation intensity: Ω<sub>SWD→IFD</sub>(t) = g-GCC<sub>SWD</sub> × (1 − τ_bridge) × (1 − δ_IFD). Click any node for domain-specific metrics.</p>
+
+    <!-- SCTL — Root Cause Layer -->
+    <div class="domain-section">
+      <div class="domain-header" style="background:var(--sctl-bg);border-bottom-color:#f0c898">
+        <div class="domain-badge db-sctl">SCTL</div>
+        <div class="domain-name" style="color:var(--sctl)">Supply-Chain Trust Layer — Root Cause / Propagation Channel</div>
+        <div class="domain-desc">τ_bridge(t) = 0.12 · Cross-domain propagation: ACTIVE</div>
+      </div>
+      <div class="domain-body">
+        <div class="node-c CRIT" onclick="nodeModal('Vendor ML Package Registry','COMPROMISED — SBOM coverage: 0%. Adversary delivered poisoned weights via this registry. No machine-readable SBOM existed; no integrity baseline. SC-SBOM stressor fully active. τ_edge = 0.04.','SC-SBOM stressor','CRITICAL','τ_edge','0.04','SBOM Coverage','0%','Propagation','SWD primary vector')">
+          <div class="node-domain-stripe" style="background:var(--sctl)"></div>
+          <span class="node-icon">📦</span>
+          <div class="node-name">Vendor ML Registry</div>
+          <div class="node-status">COMPROMISED</div>
+          <div class="node-sbom">SBOM: 0% · SC-SBOM</div>
+        </div>
+        <div class="node-c CRIT" onclick="nodeModal('Grey-Market ICS Firmware','COMPROMISED — Component sourced from non-authorized reseller. Hardware BOM absent. Backdoor pre-installed at manufacturing. SC-GREY stressor dominant. τ_edge = 0.02.','SC-GREY stressor','CRITICAL','HW-BOM','ABSENT','τ_edge','0.02','Propagation','IFD primary vector')">
+          <div class="node-domain-stripe" style="background:var(--sctl)"></div>
+          <span class="node-icon">🔩</span>
+          <div class="node-name">Grey-Mkt Firmware</div>
+          <div class="node-status">COMPROMISED</div>
+          <div class="node-sbom">SC-GREY · IFD vector</div>
+        </div>
+        <div class="node-c HIGH" onclick="nodeModal('OSS Dependency Graph','DEGRADED — SC-PATCH latency: 47d vs 14d SLA. SC-SBOM-COV: 34%. Three zero-days in transitive dependencies. Patch velocity stressor creating increasing exploitation window per v2.0 temporal model.','SC-PATCH(t)','0.78','SBOM-COV','34%','Patch Latency','47d','SLA Breach','+33d')">
+          <div class="node-domain-stripe" style="background:var(--sctl)"></div>
+          <span class="node-icon">🗃️</span>
+          <div class="node-name">OSS Dep. Graph</div>
+          <div class="node-status">DEGRADED</div>
+          <div class="node-sbom">SC-PATCH · 47d latency</div>
+        </div>
+        <div class="node-c HIGH" onclick="nodeModal('Third-Party Concentration','DEGRADED — HHI concentration index: 0.74 (above 0.25 threshold). Single-vendor exploit propagates to 74% of dependent systems. SC-CONC stressor active across both domains.','SC-CONC-HHI','0.74','Single-Vendor Dep.','74% of stack','Stressor','SC-CONC','Cross-Domain','BOTH domains')">
+          <div class="node-domain-stripe" style="background:var(--sctl)"></div>
+          <span class="node-icon">🏭</span>
+          <div class="node-name">Vendor Concentration</div>
+          <div class="node-status">DEGRADED</div>
+          <div class="node-sbom">SC-CONC · HHI=0.74</div>
+        </div>
+        <div class="node-c CLEAN" onclick="nodeModal('Isolated Verified Build Environment','CLEAN — Air-gapped, full SBOM coverage 98%, reproducible builds, SLSA Level 3. τ_edge = 0.97. No external dependency pull permitted.','SBOM-VIS','98%','SLSA Level','3','τ_edge','0.97','Stressor','None active')">
+          <div class="node-domain-stripe" style="background:var(--sctl)"></div>
+          <span class="node-icon">✅</span>
+          <div class="node-name">Verified Build Env.</div>
+          <div class="node-status">CLEAN</div>
+          <div class="node-sbom">SBOM: 98% · SLSA-3</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SWD -->
+    <div class="domain-section">
+      <div class="domain-header" style="background:var(--swd-bg);border-bottom-color:#b0d8c0">
+        <div class="domain-badge db-swd">SWD</div>
+        <div class="domain-name" style="color:var(--swd)">Software Domain — Application stacks, firmware, CI/CD, cloud-native</div>
+        <div class="domain-desc">g-GCC<sup>SWD</sup> = 0.61 · φ_SWD = 0.40</div>
+      </div>
+      <div class="domain-body">
+        <div class="node-c CRIT" onclick="nodeModal('ML Inference Service','COMPROMISED — Consuming poisoned model weights. SBOM-VIS: 0%. Model origin unverifiable. DEP-TRST: 0.08. Three downstream consumers infected. SWD BGC-C: SBOM-VIS critical.','SBOM-VIS','0%','DEP-TRST','0.08','Consumers','3 systems','g-GCC-SWD contribution','0.21')">
+          <div class="node-domain-stripe" style="background:var(--swd)"></div>
+          <span class="node-icon">🧠</span>
+          <div class="node-name">ML Inference Service</div>
+          <div class="node-status">COMPROMISED</div>
+          <div class="node-sbom">SBOM: 0% · DEP-TRST:0.08</div>
+        </div>
+        <div class="node-c CRIT" onclick="nodeModal('SCADA Control Software','COMPROMISED — Grey-market firmware backdoor activated. SW version unverifiable: no SBOM. CICD-INT: pipeline did not catch unsigned artifact. Physical actuation risk elevated.','SBOM-VIS','0%','CICD-INT','0.14','Actuation Risk','MODERATE','SWD BGC-C','CICD-INT critical')">
+          <div class="node-domain-stripe" style="background:var(--swd)"></div>
+          <span class="node-icon">🖥️</span>
+          <div class="node-name">SCADA Control SW</div>
+          <div class="node-status">COMPROMISED</div>
+          <div class="node-sbom">CICD-INT: 0.14</div>
+        </div>
+        <div class="node-c HIGH" onclick="nodeModal('SIEM / Monitoring Stack','DEGRADED — OSS SIEM running unpatched log4j variant. PATCH-VEL: 47d (SLA: 14d). SWD-PATCH-EXPT: active KEV entry present. Alert correlation degraded by false-positive injection.','PATCH-VEL','47d','SWD-PATCH-EXPT','CISA KEV active','SBOM-COV','41%','SWD BGC-C','PATCH-VEL high stress')">
+          <div class="node-domain-stripe" style="background:var(--swd)"></div>
+          <span class="node-icon">📊</span>
+          <div class="node-name">SIEM / Monitoring</div>
+          <div class="node-status">DEGRADED</div>
+          <div class="node-sbom">PATCH-VEL: 47d breach</div>
+        </div>
+        <div class="node-c HIGH" onclick="nodeModal('IR Platform','DEGRADED — 3 unverified OSS libraries. Telemetry feeds poisoned by SIEM degradation. Decision support accuracy: 54%.','DEP-TRST','0.38','SWD-DEP-MAINT','Low maintainer score','Telemetry Trust','54%','SWD BGC-C','DEP-TRST high stress')">
+          <div class="node-domain-stripe" style="background:var(--swd)"></div>
+          <span class="node-icon">🚨</span>
+          <div class="node-name">IR Platform</div>
+          <div class="node-status">DEGRADED</div>
+          <div class="node-sbom">DEP-TRST: 0.38</div>
+        </div>
+        <div class="node-c CLEAN" onclick="nodeModal('Verified Build Artifacts','CLEAN — Reproducibly built, SBOM complete (100%), SLSA-3, artifact signatures verified. CICD-INT: 0.94.','SBOM-VIS','100%','CICD-INT','0.94','SLSA','Level 3','Artifact Signing','SWD-CICD-SIGN: 1.0')">
+          <div class="node-domain-stripe" style="background:var(--swd)"></div>
+          <span class="node-icon">📦</span>
+          <div class="node-name">Verified Artifacts</div>
+          <div class="node-status">CLEAN</div>
+          <div class="node-sbom">SBOM: 100% · CICD-INT:0.94</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IFD -->
+    <div class="domain-section">
+      <div class="domain-header" style="background:var(--ifd-bg);border-bottom-color:#bcd6ef">
+        <div class="domain-badge db-ifd">IFD</div>
+        <div class="domain-name" style="color:var(--ifd)">Infrastructure Domain — OT/ICS, SCADA, network hardware, physical plant</div>
+        <div class="domain-desc">g-GCC<sup>IFD</sup> = 0.54 · φ_IFD = 0.35</div>
+      </div>
+      <div class="domain-body">
+        <div class="node-c CRIT" onclick="nodeModal('ICS / OT Gateway','COMPROMISED — Grey-market firmware backdoor active. PHY-INT: 0.12. Hardware BOM: absent. HW-PROV: 0.04. IFD BGC-C: HW-PROV critical. Physical actuation: partially bypassed.','PHY-INT','0.12','HW-PROV','0.04','HW-BOM','ABSENT','IFD BGC-C','HW-PROV critical')">
+          <div class="node-domain-stripe" style="background:var(--ifd)"></div>
+          <span class="node-icon">🔌</span>
+          <div class="node-name">ICS / OT Gateway</div>
+          <div class="node-status">COMPROMISED</div>
+          <div class="node-sbom">HW-PROV: 0.04 · BOM:0%</div>
+        </div>
+        <div class="node-c HIGH" onclick="nodeModal('C2 / Communications Layer','DEGRADED — SC-CONC: 74% single-vendor. Vendor-specific exploit degrading C2 timing channels. NET-SEG: 0.41. IFD-NET-DMZ anomalies detected.','NET-SEG','0.41','SC-CONC','74% single-vendor','IFD-NET-DMZ','Anomalies active','Key Integrity','UNCONFIRMED')">
+          <div class="node-domain-stripe" style="background:var(--ifd)"></div>
+          <span class="node-icon">📡</span>
+          <div class="node-name">C2 / Comms Layer</div>
+          <div class="node-status">DEGRADED</div>
+          <div class="node-sbom">NET-SEG: 0.41</div>
+        </div>
+        <div class="node-c HIGH" onclick="nodeModal('Network Perimeter / Firewall','DEGRADED — Firmware 14 months past SLA patch window. IFD-PHY-HWVER: 0.18. Single-source concentration. Active CVE in adjacent environments.','PHY-INT contribution','IFD-PHY-HWVER low','Patch Age','420d','Single Source','YES','IFD BGC-C','PHY-INT stressed')">
+          <div class="node-domain-stripe" style="background:var(--ifd)"></div>
+          <span class="node-icon">🛡️</span>
+          <div class="node-name">Network Perimeter</div>
+          <div class="node-status">DEGRADED</div>
+          <div class="node-sbom">IFD-PHY-HWVER: 0.18</div>
+        </div>
+        <div class="node-c CLEAN" onclick="nodeModal('Air-Gapped Backup Infrastructure','CLEAN — Fully isolated. Vendor diversity enforced. Hardware provenance verified. OPS-RES: 0.91. IFD-OPS-RDND: N+1 verified.','OPS-RES','0.91','HW-PROV','0.87','Vendor Diversity','HIGH','NET-SEG','Full air-gap')">
+          <div class="node-domain-stripe" style="background:var(--ifd)"></div>
+          <span class="node-icon">🔒</span>
+          <div class="node-name">Air-Gap Backup</div>
+          <div class="node-status">CLEAN</div>
+          <div class="node-sbom">OPS-RES: 0.91</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Governance / Org -->
+    <div class="domain-section" style="margin-bottom:0">
+      <div class="domain-header" style="background:var(--gov-bg);border-bottom-color:#cdb8e8">
+        <div class="domain-badge db-gov">GOV</div>
+        <div class="domain-name" style="color:var(--gov)">Organizational / Governance Domain</div>
+        <div class="domain-desc">Ψ_v2 Decision-Path Quality = 0.34 · Q_domain_sep = 0.21</div>
+      </div>
+      <div class="domain-body">
+        <div class="node-c CRIT" onclick="nodeModal('Incident Command Center','COMPROMISED — Decision support fed poisoned telemetry. SBOM gap means IR team cannot identify trusted components. Q_timing degraded. Ψ_v2 critically low.','Q_timing','0.18','SBOM for Triage','ABSENT','SA Quality','POISONED','Q_domain_sep','0.21 — domains conflated')">
+          <div class="node-domain-stripe" style="background:var(--gov)"></div>
+          <span class="node-icon">🎯</span>
+          <div class="node-name">Incident Command</div>
+          <div class="node-status">COMPROMISED</div>
+          <div class="node-sbom">Q_timing: 0.18</div>
+        </div>
+        <div class="node-c HIGH" onclick="nodeModal('Vendor Risk Management','DEGRADED — No SBOM delivery obligations in supplier contracts. VRM has no SC-CONC tracking. Q_sctl contribution: near zero.','SBOM Contracts','ABSENT','SC-CONC Tracking','NONE','Q_sctl contribution','~0','EO 14028 compliance','NON-COMPLIANT')">
+          <div class="node-domain-stripe" style="background:var(--gov)"></div>
+          <span class="node-icon">📋</span>
+          <div class="node-name">Vendor Risk Mgmt</div>
+          <div class="node-status">DEGRADED</div>
+          <div class="node-sbom">Q_sctl ~0</div>
+        </div>
+        <div class="node-c MED" onclick="nodeModal('Allied CSIRT Partners','PARTIAL — Contact via backup channel. SBOM format incompatibility (CycloneDX vs SPDX) blocks joint component-level triage. Q_coord: 0.29.','Q_coord','0.29','SBOM Format','CycloneDX/SPDX mismatch','Joint Triage','BLOCKED','IIC metric','0.29')">
+          <div class="node-domain-stripe" style="background:var(--gov)"></div>
+          <span class="node-icon">🌐</span>
+          <div class="node-name">Allied CSIRT</div>
+          <div class="node-status">PARTIAL</div>
+          <div class="node-sbom">Q_coord: 0.29</div>
+        </div>
+        <div class="node-c CLEAN" onclick="nodeModal('Executive Authority Hub','CLEAN — HITL guardrail active. Manual authority protocols. Aware of domain separation requirement per v2.0. SBOM remediation sprint authorized. Q_acc: 0.71.','Q_acc','0.71','HITL','ACTIVE · Manual only','SBOM Sprint','AUTHORIZED','Domain Awareness','IFD/SWD correctly separated')">
+          <div class="node-domain-stripe" style="background:var(--gov)"></div>
+          <span class="node-icon">🏛️</span>
+          <div class="node-name">Exec Authority</div>
+          <div class="node-status">CLEAN</div>
+          <div class="node-sbom">Q_acc: 0.71 · HITL active</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SBOM / SCTL ANALYSIS ══════ -->
+  <div id="p-sbom" class="panel">
+    <div class="section-h"><span style="color:var(--sctl)">SBOM &amp; Supply-Chain Trust Layer (SCTL) Analysis</span><span class="tag">E-AGCO-HT v2.0 · Part V</span></div>
+
+    <div class="math-box">
+      <div class="ml">E-AGCO-HT v2.0 · Supply-Chain Trust Index (SCTS) — SCTL Stress Aggregate</div>
+      <div class="math-eq">SCTS(t) = 1 − [Σ<sub>e∈E</sub> (<span class="msc">τ(e,t)</span> × w<sub>e</sub>)] / Σ<sub>e∈E</sub> w<sub>e</sub></div>
+      <div style="font-size:0.65rem;color:var(--text-dim);margin-top:4px">Current: SCTS = <span style="color:var(--crit);font-weight:600">0.88</span> (0=fully trusted · 1=complete trust collapse) · Cross-domain propagation: Ω<sub>SWD→IFD</sub> = g-GCC<sub>SWD</sub> × (1 − <span style="color:var(--crit)">0.12</span>) × (1 − δ<sub>IFD</sub>)</div>
+    </div>
+
+    <div class="math-box" style="border-left-color:var(--swd)">
+      <div class="ml">Trust Degradation Dynamics — τ(e, t+1)</div>
+      <div class="math-eq"><span class="msc">τ(e, t+1)</span> = <span class="msc">τ(e, t)</span> × (1 − <span class="mv">γ_e</span> × S_e(t))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recovery: <span class="msc">τ(e, t+k)</span> = τ_baseline × (1 − exp(−<span class="msw">μ_e</span> × effort))</div>
+      <div style="font-size:0.65rem;color:var(--text-dim);margin-top:4px">γ_e: Tier-1=0.05 · Tier-2=0.15 · Tier-3=0.30 &nbsp;|&nbsp; μ_e: slower for grey-market/HW than software patches</div>
+    </div>
+
+    <div class="card-2col">
+      <div class="card">
+        <div class="card-title" style="color:var(--sctl)">🧾 SCTL Component Risk Register</div>
+        <table class="data-table">
+          <thead><tr><th>Component</th><th>Domain</th><th>SBOM-VIS</th><th>τ(e,t)</th><th>Risk</th></tr></thead>
+          <tbody>
+            <tr><td>vendor-ml-runtime</td><td><span class="domain-badge db-sctl">SCTL</span></td><td style="color:var(--crit)">0%</td><td style="color:var(--crit)">0.04</td><td><span class="rbadge rb-crit">CRIT</span></td></tr>
+            <tr><td>ics-firmware-xt2</td><td><span class="domain-badge db-ifd">IFD</span></td><td style="color:var(--crit)">0%</td><td style="color:var(--crit)">0.02</td><td><span class="rbadge rb-crit">CRIT</span></td></tr>
+            <tr><td>comms-crypto-lib</td><td><span class="domain-badge db-ifd">IFD</span></td><td style="color:var(--high)">28%</td><td style="color:var(--high)">0.24</td><td><span class="rbadge rb-high">HIGH</span></td></tr>
+            <tr><td>log4j-siem-plugin</td><td><span class="domain-badge db-swd">SWD</span></td><td style="color:var(--high)">41%</td><td style="color:var(--high)">0.31</td><td><span class="rbadge rb-high">HIGH</span></td></tr>
+            <tr><td>openssl-3.0.7</td><td><span class="domain-badge db-swd">SWD</span></td><td style="color:var(--med)">62%</td><td style="color:var(--med)">0.55</td><td><span class="rbadge rb-med">MED</span></td></tr>
+            <tr><td>contingency-runtime</td><td><span class="domain-badge db-swd">SWD</span></td><td style="color:var(--ok)">98%</td><td style="color:var(--ok)">0.94</td><td><span class="rbadge rb-low">LOW</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="color:var(--sctl)">🏭 SC-CONC: Vendor Concentration (HHI)</div>
+        <p style="font-size:0.7rem;color:var(--text-mid);margin-bottom:10px">Herfindahl-Hirschman Index over critical vendors. HHI &gt; 0.25 = HIGH concentration risk. Current: <strong style="color:var(--crit)">0.74</strong></p>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">ICS/OT firmware (Vendor A)</div><div class="mbk-value" style="color:var(--crit)">HHI: 0.95</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:95%;background:var(--crit)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">Comms/crypto stack (Vendor B)</div><div class="mbk-value" style="color:var(--crit)">HHI: 0.74</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:74%;background:var(--high)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">SIEM components (Vendor C)</div><div class="mbk-value" style="color:var(--high)">HHI: 0.61</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:61%;background:var(--high)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">Auth services (Vendor D)</div><div class="mbk-value" style="color:var(--med)">HHI: 0.38</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:38%;background:var(--med)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">Backup/contingency (Diverse)</div><div class="mbk-value" style="color:var(--ok)">HHI: 0.09</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:9%;background:var(--ok)"></div></div></div>
+      </div>
+    </div>
+
+    <div class="card-4col">
+      <div class="card" style="margin-bottom:0;text-align:center">
+        <div class="card-title" style="color:var(--sctl);justify-content:center">SC-SBOM</div>
+        <div style="font-family:'Source Serif 4',serif;font-weight:700;font-size:2.4rem;color:var(--crit)">12%</div>
+        <div style="font-size:0.65rem;color:var(--text-dim);margin-top:3px">SBOM Visibility Coverage</div>
+        <div class="mbk-bar" style="margin-top:8px"><div class="mbk-fill" style="width:12%;background:var(--crit)"></div></div>
+      </div>
+      <div class="card" style="margin-bottom:0;text-align:center">
+        <div class="card-title" style="color:var(--sctl);justify-content:center">SC-CONC</div>
+        <div style="font-family:'Source Serif 4',serif;font-weight:700;font-size:2.4rem;color:var(--high)">0.74</div>
+        <div style="font-size:0.65rem;color:var(--text-dim);margin-top:3px">HHI Concentration Index</div>
+        <div class="mbk-bar" style="margin-top:8px"><div class="mbk-fill" style="width:74%;background:var(--high)"></div></div>
+      </div>
+      <div class="card" style="margin-bottom:0;text-align:center">
+        <div class="card-title" style="color:var(--sctl);justify-content:center">SC-PATCH</div>
+        <div style="font-family:'Source Serif 4',serif;font-weight:700;font-size:2.4rem;color:var(--high)">0.78</div>
+        <div style="font-size:0.65rem;color:var(--text-dim);margin-top:3px">Temporal Stressor (47d/60d)</div>
+        <div class="mbk-bar" style="margin-top:8px"><div class="mbk-fill" style="width:78%;background:var(--high)"></div></div>
+      </div>
+      <div class="card" style="margin-bottom:0;text-align:center">
+        <div class="card-title" style="color:var(--sctl);justify-content:center">SC-GREY</div>
+        <div style="font-family:'Source Serif 4',serif;font-weight:700;font-size:2.4rem;color:var(--crit)">31%</div>
+        <div style="font-size:0.65rem;color:var(--text-dim);margin-top:3px">Grey-Market Component Ratio</div>
+        <div class="mbk-bar" style="margin-top:8px"><div class="mbk-fill" style="width:31%;background:var(--crit)"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ ESCALATION TIMELINE ══════ -->
+  <div id="p-timeline" class="panel">
+    <div class="section-h">Escalation Timeline — MIRAGE CHAIN · T+00:00 to T+06:00<span class="tag">SCTL EVENTS FLAGGED · E-AGCO-HT v2.0</span></div>
+    <div class="tline">
+      <div class="tev" style="--tdc:var(--sctl)">
+        <div class="tev-time">T+00:00 · TICK 001 · SCTL / SWD</div>
+        <div class="tev-h">🧾 SCTL Entry Point: SBOM Gap Exploited — SC-SBOM Stressor Active</div>
+        <div class="tev-body">Adversary delivers poisoned ML weights via vendor registry. SC-SBOM-COVGAP: 1.0 (zero coverage). No integrity baseline exists. τ(e,t) = 0.04 — trust already near-collapsed on this edge. This is the canonical v2.0 scenario: the supply chain is the attack channel, not just the context. T_Orion<sup>SWD</sup> acceleration α = 0.45.</div>
+        <div class="tev-chain"><span class="cn cn-sctl">Vendor Registry</span><span class="cn-arr">→</span><span class="cn cn-swd">ML Inference</span><span class="cn-arr">→</span><span class="cn cn-crit">3 Consumers Infected</span></div>
+        <div class="tev-marl">MARL · π_A: SC-SBOM blindspot Q=0.94 | g-GCC<sup>SWD</sup> +0.12 | SCTS penalty applied</div>
+      </div>
+      <div class="tev" style="--tdc:var(--ifd)">
+        <div class="tev-time">T+00:45 · TICK 004 · SCTL / IFD</div>
+        <div class="tev-h">🔩 Grey-Market Firmware Backdoor Activates — SC-GREY Stressor (IFD Primary)</div>
+        <div class="tev-body">ICS firmware pre-installed backdoor receives activation signal. HW-PROV: 0.04. This is an independent second SCTL vector targeting IFD directly, creating dual simultaneous domain stress. Cross-domain coupling λ = 0.15 begins amplifying the combined signal. τ_bridge(t) degrades from 0.41 → 0.12.</div>
+        <div class="tev-chain"><span class="cn cn-sctl">Grey-Mkt FW</span><span class="cn-arr">→</span><span class="cn cn-ifd">ICS Gateway</span><span class="cn-arr">→</span><span class="cn cn-ifd">SCADA Control</span><span class="cn-arr">→</span><span class="cn cn-crit">Actuation Risk</span></div>
+        <div class="tev-marl">MARL · STI: 0.38 | SC-GREY-IMPL multiplier ×3.4 | λ coupling fires: g-GCC<sup>IFD</sup> × g-GCC<sup>SWD</sup> = 0.33</div>
+      </div>
+      <div class="tev" style="--tdc:var(--swd)">
+        <div class="tev-time">T+01:20 · TICK 008 · SWD</div>
+        <div class="tev-h">💾 SC-PATCH Temporal Stressor: OSS CVE Exploitation Window Opens</div>
+        <div class="tev-body">SC-PATCH(t) = min(1, 33/30) = 1.0 — SLA ceiling breached. SIEM log4j unpatched. Per v2.0 model, SC-PATCH feeds T_Orion for both domains simultaneously, creating an accelerating time-pressure gradient. Alert correlation degraded. SWD α_Investigate = 0.55 (software attribution collapses under SC ambiguity).</div>
+        <div class="tev-marl">MARL · SC-PATCH stressor at ceiling | T_Orion<sup>SWD</sup> acceleration escalating | IIC metric: 0.29</div>
+      </div>
+      <div class="tev" style="--tdc:var(--high)">
+        <div class="tev-time">T+02:00 · TICK 012 · IFD / SCTL</div>
+        <div class="tev-h">📡 SC-CONC Materializes: Single-Vendor Comms Stack Exploit</div>
+        <div class="tev-body">HHI = 0.74. Vendor-specific exploit cascades across 74% of comms stack. SC-CONC-CRIT: 3 critical services dependent on single vendor. Per v2.0 mapping, SC-CONC triggers both IFD and SWD simultaneously — the cross-domain amplification term λ × g-GCC<sup>IFD</sup> × g-GCC<sup>SWD</sup> reaches 0.053, a nonlinear escalation signal.</div>
+        <div class="tev-marl">MARL · λ nonlinear term fires | Master g-GCC: 0.25×0.54 + 0.40×0.61 + 0.25×0.88 + 0.15×0.54×0.61 = 0.67</div>
+      </div>
+      <div class="tev" style="--tdc:var(--gov)">
+        <div class="tev-time">T+06:00 · TICK 036 · GOV</div>
+        <div class="tev-h">⚡ Decision Point — Ψ_v2 Quality Measurement + Domain Separation Test</div>
+        <div class="tev-body">Ψ_v2 computed: w_T×Q_timing(0.18) + w_C×Q_coord(0.29) + w_N×Q_norm(0.44) + w_SC×Q_sctl(0.08) + w_A×Q_acc(0.71) + ε×Q_domain_sep(0.21) = 0.30. Domain-separation bonus ε = 0.05: IR team did not correctly separate IFD/SWD playbooks early. MARL recommends: Option B — isolate all 3rd-party SW/HW pending SBOM audit, projected SCTS recovery 0.41 in 72hr.</div>
+        <div class="tev-marl">MARL · Ψ_v2 = 0.30 (below threshold 0.50) | Q_domain_sep penalty: teams conflated IFD/SWD | SBOM audit critical path</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ IR LANES ══════ -->
+  <div id="p-lanes" class="panel">
+    <div class="section-h">Incident Response Workflow — v2.0 Domain-Separated Playbooks<span class="tag">Ψ_v2 QUALITY TRACKING</span></div>
+    <p class="prose">The v2.0 architecture introduces domain-separated escalation chains with different α coefficients (IFD: Patch/Remediate α=0.20; SWD: Patch/Remediate α=0.50). Conflating IFD and SWD into a single response track reduces Q_domain_sep and penalizes Ψ_v2.</p>
+    <div class="lanes-grid">
+      <div class="lane-card" style="--lc:var(--ifd)">
+        <div class="lane-hdr"><span>🏗️</span><div class="lane-hdr-name">IFD — Infrastructure</div></div>
+        <div class="lane-body">
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk done">✓</div><div><div class="pstep-txt">Isolate grey-market ICS firmware components; switch to verified hardware fallback</div><div class="pstep-sc">HW-PROV: initiate hardware BOM verification sprint</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Enforce IT/OT separation (IFD-NET-ITOTSEP); verify air-gap integrity for critical OT systems</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Verify OPS-RES: confirm degraded-mode operational capacity and RTO compliance</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Emergency patch for OT firmware (α_IFD_patch = 0.20 — slow, requires physical access)</div><div class="pstep-sc">IFD-PHY-FWAUTH: re-authenticate all firmware post-patch</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Diversify vendor supply post-incident; document HHI reduction roadmap</div></div></div>
+        </div>
+      </div>
+      <div class="lane-card" style="--lc:var(--swd)">
+        <div class="lane-hdr"><span>💾</span><div class="lane-hdr-name">SWD — Software</div></div>
+        <div class="lane-body">
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk done">✓</div><div><div class="pstep-txt">Generate emergency SBOM for all production ML models; compare to last-known-good baseline</div><div class="pstep-sc">SBOM-VIS: 0%→target 70% within 48hr</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Apply CISA KEV patches immediately (α_SWD_patch = 0.50 — faster pipeline-based deployment)</div><div class="pstep-sc">PATCH-VEL: SWD-PATCH-EXPT active entries</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Enforce CICD-INT: require artifact signing (SLSA Level 2+) for all deployments going forward</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Audit DEP-TRST: identify abandoned/sunset libraries (SWD-DEP-LRISK) in production stack</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Add SBOM delivery requirements to all software vendor contracts (EO 14028 / CRA compliance)</div></div></div>
+        </div>
+      </div>
+      <div class="lane-card" style="--lc:var(--sctl)">
+        <div class="lane-hdr"><span>🧾</span><div class="lane-hdr-name">SCTL — Supply Chain</div></div>
+        <div class="lane-body">
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Trigger Q_sctl action: share machine-readable SBOM (CycloneDX) with affected downstream parties within SLA window</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Q_sctl vendor notification: notify all HHI-critical vendors in correct sequence with actionable guidance</div><div class="pstep-sc">SC-CONC: SC-CONC-CONT contractual resilience check</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Q_sctl patch fidelity: confirm patch deployed across all in-scope systems within governance window</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Q_sctl physical response: initiate hardware inspection/replacement protocol for SC-GREY flagged components</div><div class="pstep-sc">SC-GREY-DETCT: activate specialized inspection tooling</div></div></div>
+        </div>
+      </div>
+      <div class="lane-card" style="--lc:var(--gov)">
+        <div class="lane-hdr"><span>🏛️</span><div class="lane-hdr-name">GOV — Governance</div></div>
+        <div class="lane-body">
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk done">✓</div><div><div class="pstep-txt">Correctly identify IFD/SWD separation early in triage (Q_domain_sep bonus: +ε=0.05 to Ψ_v2)</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Q_norm: activate regulatory notification timeline (NIS2 72hr, EO 14028 SBOM obligations)</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Q_coord: cross-border CSIRT sharing with aligned SBOM format (CycloneDX) to prevent format incompatibility block</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Post-incident Ψ_v2 assessment: compare decision quality against archetype baseline, identify improvement levers</div></div></div>
+          <div class="pstep" onclick="toggleStep(this)"><div class="pstep-chk">✓</div><div><div class="pstep-txt">Brief executive authority: SBOM program investment justification using counterfactual Ψ_v2 simulation</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ E-AGCO-HT ENGINE ══════ -->
+  <div id="p-marl" class="panel">
+    <div class="section-h"><span style="color:var(--gov)">E-AGCO-HT v2.0 Mathematical Engine</span><span class="tag">Evans Accelerated Governance Cyber Optimization · Hierarchical Theorem</span></div>
+
+    <div class="math-box">
+      <div class="ml">Master g-GCC Integration — v2.0 Dual-Domain + SCTL + Coupling Term</div>
+      <div class="math-eq">g-GCC = <span class="mv">w_IFD × g-GCC<sup>IFD</sup></span> + <span class="msw">w_SWD × g-GCC<sup>SWD</sup></span> + <span class="msc">w_SC × SCTS</span> + <span class="mg">λ × g-GCC<sup>IFD</sup> × g-GCC<sup>SWD</sup></span></div>
+      <div style="font-size:0.64rem;color:var(--text-mid);margin-top:5px">Current: <span class="mv">0.25×0.54</span> + <span class="msw">0.40×0.61</span> + <span class="msc">0.25×0.88</span> + <span class="mg">0.15×0.54×0.61</span> = <span style="color:var(--crit);font-weight:700" id="gcc-display">0.670</span> &nbsp;·&nbsp; Constraint: w_IFD + w_SWD + w_SC + λ×E[g-GCC<sup>IFD</sup>×g-GCC<sup>SWD</sup>] = 1 ✓</div>
+    </div>
+
+    <div class="math-box" style="border-left-color:var(--gov)">
+      <div class="ml">v2.0 Decision-Path Quality Function (Ψ_v2) — Domain-Separation Bonus</div>
+      <div class="math-eq">Ψ<sub>v2</sub> = <span class="mv">w_T×Q_timing</span> + <span class="msw">w_C×Q_coord</span> + <span class="mg">w_N×Q_norm</span> + <span class="msc">w_SC×Q_sctl</span> + <span class="mv">w_A×Q_acc</span> + <span class="mg">ε×Q_domain_sep</span></div>
+      <div style="font-size:0.64rem;color:var(--text-mid);margin-top:5px">Default weights: w_T=0.30 · w_C=0.25 · w_N=0.15 · w_SC=0.20 · w_A=0.10 · ε=0.05 &nbsp;·&nbsp; Current Ψ_v2 = <span style="color:var(--crit);font-weight:600">0.30</span> (threshold: 0.50)</div>
+    </div>
+
+    <div class="card-2col">
+      <div class="card">
+        <div class="card-title" style="color:var(--crit)">Adversary Agent π_A — SC-Aware Policy</div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">SC-SBOM Blindspot Exploitation</div><div class="mbk-value" style="color:var(--crit)">Q = 0.94</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:94%;background:var(--crit)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">SC-GREY Pre-positioning</div><div class="mbk-value" style="color:var(--crit)">Q = 0.87</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:87%;background:var(--high)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">SC-PATCH Window Timing</div><div class="mbk-value" style="color:var(--high)">Q = 0.78</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:78%;background:var(--med)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">SC-CONC Concentration Targeting</div><div class="mbk-value" style="color:var(--high)">Q = 0.74</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:74%;background:var(--med)"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--ok)">Defender Agent π_D — v2.0 Policy</div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">SBOM-VIS Coverage</div><div class="mbk-value" style="color:var(--crit)">0.12</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:12%;background:var(--crit)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">Domain Separation Quality (Q_domain_sep)</div><div class="mbk-value" style="color:var(--crit)">0.21</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:21%;background:var(--crit)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">Patch Velocity Compliance</div><div class="mbk-value" style="color:var(--high)">0.39</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:39%;background:var(--high)"></div></div></div>
+        <div class="mbk"><div class="mbk-header"><div class="mbk-label">HW Provenance Assurance</div><div class="mbk-value" style="color:var(--crit)">0.18</div></div><div class="mbk-bar"><div class="mbk-fill" style="width:18%;background:var(--crit)"></div></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Scenario Archetype Weight Configuration — v2.0 Reference</div>
+      <table class="data-table">
+        <thead><tr><th>Archetype</th><th>w_IFD</th><th>w_SWD</th><th>w_SC</th><th>λ</th><th>Dominant SCTL Stressor</th></tr></thead>
+        <tbody>
+          <tr><td>Critical Infrastructure Ransomware</td><td>0.45</td><td>0.25</td><td>0.20</td><td>0.10</td><td><span class="rbadge rb-med">SC-PATCH</span></td></tr>
+          <tr><td>SW Supply-Chain Compromise (SolarWinds-class)</td><td>0.25</td><td>0.40</td><td>0.30</td><td>0.15</td><td><span class="rbadge rb-crit">SC-SBOM + SC-CONC</span></td></tr>
+          <tr><td>OT/ICS Targeted Attack (Industroyer-class)</td><td>0.55</td><td>0.20</td><td>0.15</td><td>0.10</td><td><span class="rbadge rb-crit">SC-GREY + SC-PATCH</span></td></tr>
+          <tr><td>Cloud-Native Dep. Poisoning (XZ-class)</td><td>0.15</td><td>0.50</td><td>0.30</td><td>0.05</td><td><span class="rbadge rb-crit">SC-SBOM + SC-CONC</span></td></tr>
+          <tr><td>Nation-State Hardware Implant</td><td>0.40</td><td>0.25</td><td>0.25</td><td>0.20</td><td><span class="rbadge rb-crit">SC-GREY (dominant)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════ POLICY STRESS TESTING ══════ -->
+  <div id="p-policy" class="panel">
+    <div class="section-h"><span style="color:var(--gov)">Policy Stress Testing — Cultural, Geopolitical &amp; Governance Norms</span><span class="tag">WIN-WIN POLICY DESIGN</span></div>
+    <p class="prose">Auracelle Orion applies the same stress-testing logic used for cyber resilience to <strong>governance policy</strong>: testing whether proposed policies survive cultural norm divergence, misinformation campaigns, geopolitical pressure, and differing national frameworks — the same questions Auracelle AI Governance Labs applies across all its instruments. The goal is identifying policies that are robustly acceptable across stakeholder groups: <em>win-win governance</em>.</p>
+
+    <div class="policy-grid">
+      <div class="policy-card">
+        <div class="policy-title">🌍 Cultural Norm Acceptance Index — SBOM Mandate Stress Test</div>
+        <p style="font-size:0.72rem;color:var(--text-mid);margin-bottom:10px">How does the SBOM mandate policy survive across national regulatory cultures? Score = predicted policy compliance rate under current governance norms.</p>
+        <div class="cultural-row"><div class="cr-country">🇺🇸 United States</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:82%;background:var(--ok)"></div></div><div class="cr-score" style="color:var(--ok)">0.82</div><div class="cr-tag" style="color:var(--ok)">EO 14028</div></div>
+        <div class="cultural-row"><div class="cr-country">🇪🇺 EU / NIS2</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:76%;background:var(--ok)"></div></div><div class="cr-score" style="color:var(--ok)">0.76</div><div class="cr-tag" style="color:var(--med)">CRA pending</div></div>
+        <div class="cultural-row"><div class="cr-country">🇬🇧 United Kingdom</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:68%;background:var(--med)"></div></div><div class="cr-score" style="color:var(--med)">0.68</div><div class="cr-tag" style="color:var(--med)">Emerging</div></div>
+        <div class="cultural-row"><div class="cr-country">🇯🇵 Japan</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:61%;background:var(--med)"></div></div><div class="cr-score" style="color:var(--med)">0.61</div><div class="cr-tag" style="color:var(--med)">METI active</div></div>
+        <div class="cultural-row"><div class="cr-country">🇮🇳 India</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:42%;background:var(--high)"></div></div><div class="cr-score" style="color:var(--high)">0.42</div><div class="cr-tag" style="color:var(--high)">Fragmented</div></div>
+        <div class="cultural-row"><div class="cr-country">🌏 ASEAN</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:38%;background:var(--high)"></div></div><div class="cr-score" style="color:var(--high)">0.38</div><div class="cr-tag" style="color:var(--high)">Low alignment</div></div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-title">📡 Misinformation Pressure Index — Active Campaigns</div>
+        <p style="font-size:0.72rem;color:var(--text-mid);margin-bottom:10px">Real-time misinformation stress on policy coherence. High index = policy narrative at risk of public trust erosion.</p>
+        <div class="misinfo-indicator"><div class="mi-label">SBOM "surveillance mandate" narrative</div><div class="mi-score" style="color:var(--high)">0.61</div><div class="mi-trend">↑</div></div>
+        <div class="misinfo-indicator"><div class="mi-label">Supply chain policy "trade barrier" framing</div><div class="mi-score" style="color:var(--high)">0.54</div><div class="mi-trend">↑</div></div>
+        <div class="misinfo-indicator"><div class="mi-label">Grey-market sourcing "cost efficiency" justification</div><div class="mi-score" style="color:var(--med)">0.47</div><div class="mi-trend">→</div></div>
+        <div class="misinfo-indicator"><div class="mi-label">Patch SLA "innovation burden" narrative</div><div class="mi-score" style="color:var(--med)">0.41</div><div class="mi-trend">↓</div></div>
+        <div class="misinfo-indicator"><div class="mi-label">Vendor concentration "efficiency" counter-framing</div><div class="mi-score" style="color:var(--ok)">0.28</div><div class="mi-trend">↓</div></div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-title">🌐 Geopolitical Stress — Policy Acceptance by Actor</div>
+        <p style="font-size:0.72rem;color:var(--text-mid);margin-bottom:10px">Which geopolitical actors are stressed by the current supply chain policy posture? High = resistance likely.</p>
+        <div class="cultural-row"><div class="cr-country">Five Eyes</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:15%;background:var(--ok)"></div></div><div class="cr-score" style="color:var(--ok)">Low stress</div><div class="cr-tag" style="color:var(--ok)">Aligned</div></div>
+        <div class="cultural-row"><div class="cr-country">NATO allies</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:28%;background:var(--ok)"></div></div><div class="cr-score" style="color:var(--ok)">Low-med</div><div class="cr-tag" style="color:var(--med)">NIS2 gap</div></div>
+        <div class="cultural-row"><div class="cr-country">Non-aligned</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:62%;background:var(--high)"></div></div><div class="cr-score" style="color:var(--high)">High</div><div class="cr-tag" style="color:var(--high)">Contested</div></div>
+        <div class="cultural-row"><div class="cr-country">Adversarial states</div><div class="cr-bar-outer"><div class="cr-bar-fill" style="width:91%;background:var(--crit)"></div></div><div class="cr-score" style="color:var(--crit)">Critical</div><div class="cr-tag" style="color:var(--crit)">Active resist</div></div>
+      </div>
+
+      <div class="policy-card">
+        <div class="policy-title">✅ Win-Win Policy Design — Robustness Criteria</div>
+        <p style="font-size:0.72rem;color:var(--text-mid);margin-bottom:8px">A win-win governance policy survives all three stress domains simultaneously: cultural, misinformation, and geopolitical. Current candidates:</p>
+        <div class="win-win-grid">
+          <div class="ww-box" style="border-color:#b0d8c0">
+            <div class="ww-icon">🤝</div>
+            <div class="ww-title">Interoperable Standards</div>
+            <div class="ww-desc">CycloneDX/SPDX adoption eliminates format barriers without imposing vendor preference</div>
+          </div>
+          <div class="ww-box" style="border-color:#b0d8c0">
+            <div class="ww-icon">⏱️</div>
+            <div class="ww-title">Risk-Tiered Timelines</div>
+            <div class="ww-desc">Phase SBOM mandates by criticality — reduces innovation-burden narrative</div>
+          </div>
+          <div class="ww-box" style="border-color:#b0d8c0">
+            <div class="ww-icon">🔬</div>
+            <div class="ww-title">Shared Threat Intel</div>
+            <div class="ww-desc">STIX/TAXII SC threat sharing builds multilateral trust without data sovereignty conflict</div>
+          </div>
+          <div class="ww-box" style="border-color:#cdb8e8">
+            <div class="ww-icon">⚖️</div>
+            <div class="ww-title">Liability Safe Harbor</div>
+            <div class="ww-desc">SBOM disclosure earns legal safe harbor — incentivizes compliance without coercion</div>
+          </div>
+          <div class="ww-box" style="border-color:#cdb8e8">
+            <div class="ww-icon">🏭</div>
+            <div class="ww-title">Vendor Diversification Fund</div>
+            <div class="ww-desc">Procurement subsidies for HHI reduction — economic incentive aligns with security</div>
+          </div>
+          <div class="ww-box" style="border-color:#f0c898">
+            <div class="ww-icon">🌍</div>
+            <div class="ww-title">Mutual Recognition</div>
+            <div class="ww-desc">Bilateral SBOM standard recognition removes trade-barrier framing for non-aligned actors</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ NOF-C REGISTRY ══════ -->
+  <div id="p-nof" class="panel">
+    <div class="section-h">NOF-C Registry v2.0 — 60 Features Across 3 Zones<span class="tag">PART X · E-AGCO-HT v2.0</span></div>
+    <p class="prose">IFD: 19 NOF-C features (PHY-INT×5, OPS-RES×5, NET-SEG×4, HW-PROV×5) · SWD: 22 features (SBOM-VIS×6, DEP-TRST×6, PATCH-VEL×6, CICD-INT×5, 1 shared) · SCTL: 19 features (SC-SBOM×4, SC-CONC×5, SC-PATCH×5, SC-GREY×5) · Cross-domain: 8 BGC-C + 4 ACC</p>
+    <div class="nof-grid">
+      <div class="nof-box"><div class="nof-zone">IFD · PHY-INT</div><div class="nof-code">IFD-PHY-FWAUTH</div><div class="nof-name">Firmware authentication coverage ratio</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.14</span></div></div>
+      <div class="nof-box"><div class="nof-zone">IFD · PHY-INT</div><div class="nof-code">IFD-PHY-GREY</div><div class="nof-name">Grey-market component exposure index</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.31</span></div></div>
+      <div class="nof-box"><div class="nof-zone">IFD · HW-PROV</div><div class="nof-code">IFD-HWP-BILL</div><div class="nof-name">Hardware Bill of Materials completeness</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.08</span></div></div>
+      <div class="nof-box"><div class="nof-zone">IFD · HW-PROV</div><div class="nof-code">IFD-HWP-GREY</div><div class="nof-name">Grey-market sourcing fraction</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.31</span></div></div>
+      <div class="nof-box"><div class="nof-zone">IFD · NET-SEG</div><div class="nof-code">IFD-NET-ITOTSEP</div><div class="nof-name">IT/OT separation enforcement score</div><div class="nof-obs">Current: <span style="color:var(--high)">0.44</span></div></div>
+      <div class="nof-box"><div class="nof-zone">IFD · OPS-RES</div><div class="nof-code">IFD-OPS-RTO</div><div class="nof-name">Recovery Time Objective compliance rate</div><div class="nof-obs">Current: <span style="color:var(--high)">0.52</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SWD · SBOM-VIS</div><div class="nof-code">SWD-SBOM-COV</div><div class="nof-name">SBOM completeness ratio</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.12</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SWD · SBOM-VIS</div><div class="nof-code">SWD-SBOM-VEX</div><div class="nof-name">VEX statement coverage rate</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.04</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SWD · DEP-TRST</div><div class="nof-code">SWD-DEP-CONC</div><div class="nof-name">Third-party concentration (HHI)</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.74</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SWD · PATCH-VEL</div><div class="nof-code">SWD-PATCH-MTTD</div><div class="nof-name">Mean time to deploy critical patches</div><div class="nof-obs">Current: <span style="color:var(--high)">47d (SLA: 14d)</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SWD · PATCH-VEL</div><div class="nof-code">SWD-PATCH-EXPT</div><div class="nof-name">Known-exploited vulnerability window</div><div class="nof-obs">Current: <span style="color:var(--crit)">CISA KEV active</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SWD · CICD-INT</div><div class="nof-code">SWD-CICD-SLSA</div><div class="nof-name">SLSA framework compliance level (0-4)</div><div class="nof-obs">Current: <span style="color:var(--high)">Level 1.2</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SCTL · SC-SBOM</div><div class="nof-code">SC-SBOM-COVGAP</div><div class="nof-name">Fraction with no machine-readable SBOM</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.88</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SCTL · SC-CONC</div><div class="nof-code">SC-CONC-HHI</div><div class="nof-name">HHI over critical software/hardware vendors</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.74</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SCTL · SC-CONC</div><div class="nof-code">SC-CONC-GEO</div><div class="nof-name">Geographic concentration / jurisdiction risk</div><div class="nof-obs">Current: <span style="color:var(--high)">0.61</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SCTL · SC-PATCH</div><div class="nof-code">SC-PATCH-VDR</div><div class="nof-name">Vendor-to-operator patch delivery latency</div><div class="nof-obs">Current: <span style="color:var(--high)">47d mean</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SCTL · SC-PATCH</div><div class="nof-code">SC-PATCH-OT</div><div class="nof-name">OT-specific patch availability gap</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.72</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SCTL · SC-GREY</div><div class="nof-code">SC-GREY-PROC</div><div class="nof-name">Non-authorized procurement channel fraction</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.31</span></div></div>
+      <div class="nof-box"><div class="nof-zone">SCTL · SC-GREY</div><div class="nof-code">SC-GREY-IMPL</div><div class="nof-name">Potential implant exposure index</div><div class="nof-obs">Current: <span style="color:var(--crit)">0.78</span></div></div>
+    </div>
+  </div>
+
+  <!-- ══════ DOCUMENT ANALYSIS ══════ -->
+  <div id="p-docs" class="panel">
+    <div class="section-h">📎 Document Analysis — Tabletop, SOC, DR/COOP, Policy Upload<span class="tag">E-AGCO-HT v2.0 STRESS TESTING</span></div>
+    <p class="prose">Upload organizational documents to stress-test them against the E-AGCO-HT v2.0 framework. Orion will analyze tabletop exercises, SOC reports, disaster recovery procedures, COOP documents, incident response plans, and policy documents — identifying gaps against IFD, SWD, and SCTL requirements, flagging SBOM/supply-chain blind spots, and computing a Ψ_v2 alignment score.</p>
+
+    <!-- Document type selector -->
+    <div class="card">
+      <div class="card-title">Select Document Type for Analysis Mode</div>
+      <div class="doc-type-grid">
+        <div class="doc-type-chip selected" onclick="selectDocType(this,'tabletop')">
+          <span class="doc-type-icon">🎲</span>
+          <div class="doc-type-name">Tabletop Exercise</div>
+          <div class="doc-type-desc">Wargaming plans, exercise scenarios, TTX scripts</div>
+        </div>
+        <div class="doc-type-chip" onclick="selectDocType(this,'soc')">
+          <span class="doc-type-icon">🖥️</span>
+          <div class="doc-type-name">SOC Report</div>
+          <div class="doc-type-desc">SOC 2 Type I/II, security operations reports, audit findings</div>
+        </div>
+        <div class="doc-type-chip" onclick="selectDocType(this,'dr')">
+          <span class="doc-type-icon">🔄</span>
+          <div class="doc-type-name">Disaster Recovery</div>
+          <div class="doc-type-desc">DR procedures, BCP, RTO/RPO documentation</div>
+        </div>
+        <div class="doc-type-chip" onclick="selectDocType(this,'coop')">
+          <span class="doc-type-icon">🏛️</span>
+          <div class="doc-type-name">COOP Document</div>
+          <div class="doc-type-desc">Continuity of Operations Plans, essential functions</div>
+        </div>
+        <div class="doc-type-chip" onclick="selectDocType(this,'ir')">
+          <span class="doc-type-icon">🚨</span>
+          <div class="doc-type-name">Incident Response Plan</div>
+          <div class="doc-type-desc">IR playbooks, response procedures, escalation guides</div>
+        </div>
+        <div class="doc-type-chip" onclick="selectDocType(this,'policy')">
+          <span class="doc-type-icon">📜</span>
+          <div class="doc-type-name">Policy / Governance</div>
+          <div class="doc-type-desc">Cyber policies, governance frameworks, standards</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload zone -->
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('fileInput').click()"
+         ondragover="event.preventDefault();this.classList.add('dragover')"
+         ondragleave="this.classList.remove('dragover')"
+         ondrop="event.preventDefault();this.classList.remove('dragover');handleFiles(event.dataTransfer.files)">
+      <div class="upload-icon">📂</div>
+      <div class="upload-title">Drop documents here or click to browse</div>
+      <div class="upload-sub">Supported: PDF, DOCX, DOC, TXT, XLSX, PPTX, JSON, CSV<br>Documents are analyzed against E-AGCO-HT v2.0 IFD/SWD/SCTL domain structure</div>
+      <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('fileInput').click()">Choose Files</button>
+    </div>
+
+    <!-- Uploaded files list -->
+    <div class="uploaded-list" id="uploaded-list"></div>
+
+    <!-- Analysis results -->
+    <div id="analysis-results"></div>
+
+    <!-- Demo / preloaded analysis -->
+    <div class="card">
+      <div class="card-title">📋 Sample Analysis — Tabletop Exercise: "MIRAGE CHAIN TTX v1.2"</div>
+      <div class="analysis-card" style="margin-bottom:0;box-shadow:none;border:none;padding:0">
+        <div class="analysis-header" style="padding:0 0 10px 0">
+          <span style="font-size:1.2rem">🎲</span>
+          <div class="analysis-doc-name">MIRAGE_CHAIN_TTX_v1.2.pdf</div>
+          <span class="analysis-type-badge" style="background:var(--ifd-bg);color:var(--ifd);border:1px solid #bcd6ef">TABLETOP</span>
+          <span class="rbadge rb-high">Ψ_v2 = 0.34</span>
+        </div>
+        <div class="finding-row">
+          <div class="finding-domain"><span class="domain-badge db-sctl">SCTL</span></div>
+          <div class="finding-text"><strong>SBOM gap not modeled in exercise.</strong> The tabletop scenario assumed IR team could identify affected components from vendor notification. SC-SBOM-COVGAP not included as a stressor. Defender discovery time was 2× optimistic vs. E-AGCO-HT v2.0 model prediction.</div>
+          <div class="finding-metric" style="color:var(--crit)">GAP · HIGH</div>
+        </div>
+        <div class="finding-row">
+          <div class="finding-domain"><span class="domain-badge db-ifd">IFD</span></div>
+          <div class="finding-text"><strong>IFD/SWD domains conflated in exercise design.</strong> Exercise used a single "technical" lane with no separation of IFD (physical/OT) vs. SWD (software/CI-CD) response tracks. Q_domain_sep = 0.19. Per v2.0, this reduces Ψ_v2 by ~0.10.</div>
+          <div class="finding-metric" style="color:var(--high)">Q_d_sep: 0.19</div>
+        </div>
+        <div class="finding-row">
+          <div class="finding-domain"><span class="domain-badge db-swd">SWD</span></div>
+          <div class="finding-text"><strong>Patch velocity not treated as time-varying stressor.</strong> Exercise gave teams a static "vulnerability present" flag. v2.0 SC-PATCH is temporal — the exploitation window narrows continuously from CVE publication. Tabletop missed the time-pressure escalation mechanics.</div>
+          <div class="finding-metric" style="color:var(--high)">SC-PATCH: absent</div>
+        </div>
+        <div class="finding-row">
+          <div class="finding-domain"><span class="domain-badge db-gov">GOV</span></div>
+          <div class="finding-text"><strong>Cross-border coordination modeled as binary.</strong> Exercise either succeeded or failed on allied CSIRT contact. v2.0 models partial coordination including SBOM format incompatibility (SC-SBOM-FORMAT). Q_coord was inflated by ~0.15 vs. empirical baseline.</div>
+          <div class="finding-metric" style="color:var(--med)">Q_coord: +0.15 bias</div>
+        </div>
+        <div class="finding-row" style="border-bottom:none">
+          <div class="finding-domain"><span class="domain-badge db-sctl">SCTL</span></div>
+          <div class="finding-text"><strong>Recommendation:</strong> Add SC-SBOM, SC-PATCH temporal mechanic, and IFD/SWD separated injects. This is the core tabletop value-add from E-AGCO-HT v2.0 — domain-separation gives teams a concrete triage decision to make at exercise minute 15.</div>
+          <div class="finding-metric" style="color:var(--ok)">ACTION</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end cbody -->
+
+  <!-- Sim controls -->
+  <div class="simbar">
+    <button class="sbtn primary" onclick="advTick()">▶ Advance Tick</button>
+    <button class="sbtn danger" onclick="injectSCTL()">🧾 SCTL Event</button>
+    <button class="sbtn success" onclick="patchAction()">🔧 Apply Patch</button>
+    <button class="sbtn sctl" onclick="marlStep()">⬡ MARL Step</button>
+    <button class="sbtn neutral" onclick="resetSim()">↺ Reset</button>
+    <div class="sim-info">TICK: <b id="stk">036</b> &nbsp;·&nbsp; T+ <b id="selp">06:00</b> &nbsp;·&nbsp; g-GCC: <b id="gcc-live">0.670</b> &nbsp;·&nbsp; Ψ_v2: <b id="psi-live">0.300</b></div>
+  </div>
+</div>
+
+<!-- ═══ RIGHT PANEL ═══ -->
+<div class="rpanel">
+
+  <div class="rsec">
+    <div class="rsec-title">SCTI — Trust Index</div>
+    <div class="scti-wrap">
+      <div class="scti-ring">
+        <svg viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="24" stroke="#e8edf4" stroke-width="5" fill="none"/>
+          <circle cx="30" cy="30" r="24" stroke="var(--sctl)" stroke-width="5" fill="none"
+            stroke-dasharray="150.8" stroke-dashoffset="148.3" stroke-linecap="round" id="scti-ring"
+            style="transition:stroke-dashoffset 1s ease;"/>
+        </svg>
+        <div class="scti-text" id="scti-pct">1%</div>
+      </div>
+      <div class="scti-info">
+        <div class="scti-title">SCTS = 0.88 · CRITICAL</div>
+        <div class="scti-sub">Trust near-collapse. SC-SBOM=0%, SC-GREY=31%, SC-CONC=0.74.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rsec">
+    <div class="rsec-title">E-AGCO-HT v2.0 Metrics</div>
+    <div class="mbk">
+      <div class="mbk-header"><div class="mbk-label">g-GCC (Master)</div><div class="mbk-value" style="color:var(--crit)" id="v-gcc">0.670</div></div>
+      <div class="mbk-bar"><div class="mbk-fill" style="width:67%;background:var(--crit)" id="b-gcc"></div></div>
+    </div>
+    <div class="mbk">
+      <div class="mbk-header"><div class="mbk-label">g-GCC<sup>IFD</sup></div><div class="mbk-value" style="color:var(--high)" id="v-gifd">0.540</div></div>
+      <div class="mbk-bar"><div class="mbk-fill" style="width:54%;background:var(--ifd)" id="b-gifd"></div></div>
+    </div>
+    <div class="mbk">
+      <div class="mbk-header"><div class="mbk-label">g-GCC<sup>SWD</sup></div><div class="mbk-value" style="color:var(--high)" id="v-gswd">0.610</div></div>
+      <div class="mbk-bar"><div class="mbk-fill" style="width:61%;background:var(--swd)" id="b-gswd"></div></div>
+    </div>
+    <div class="mbk">
+      <div class="mbk-header"><div class="mbk-label">SCTS (Supply Chain)</div><div class="mbk-value" style="color:var(--crit)" id="v-scts">0.880</div></div>
+      <div class="mbk-bar"><div class="mbk-fill" style="width:88%;background:var(--sctl)" id="b-scts"></div></div>
+    </div>
+    <div class="mbk">
+      <div class="mbk-header"><div class="mbk-label">Ψ_v2 Decision Quality</div><div class="mbk-value" style="color:var(--crit)" id="v-psi">0.300</div></div>
+      <div class="mbk-bar"><div class="mbk-fill" style="width:30%;background:var(--gov)" id="b-psi"></div></div>
+    </div>
+    <div class="mbk">
+      <div class="mbk-header"><div class="mbk-label">Q_domain_sep</div><div class="mbk-value" style="color:var(--crit)" id="v-qds">0.210</div></div>
+      <div class="mbk-bar"><div class="mbk-fill" style="width:21%;background:var(--gov)" id="b-qds"></div></div>
+    </div>
+    <div class="mbk">
+      <div class="mbk-header"><div class="mbk-label">SBOM-VIS Coverage</div><div class="mbk-value" style="color:var(--crit)" id="v-sbom">12%</div></div>
+      <div class="mbk-bar"><div class="mbk-fill" style="width:12%;background:var(--sctl)" id="b-sbom"></div></div>
+    </div>
+  </div>
+
+  <div class="rsec">
+    <div class="rsec-title">Governance Index</div>
+    <div class="gov-gauge-wrap">
+      <div class="gov-number" style="color:var(--crit)" id="gov-n">38</div>
+      <div class="gov-label">/ 100 · GOVERNANCE INDEX</div>
+      <div class="gov-status" style="color:var(--crit)">BELOW STABILITY FLOOR (50)</div>
+    </div>
+  </div>
+
+  <div class="rsec" style="padding-bottom:6px">
+    <div class="rsec-title">Event Feed</div>
+  </div>
+  <div class="afeed" id="afeed">
+    <div class="aline"><div class="al-time">T+06:00</div><div class="al-tag SBOM">SBOM</div><div class="al-msg">SCTS=0.88 — one SC event from NC3 fail-safe threshold</div></div>
+    <div class="aline"><div class="al-time">T+05:50</div><div class="al-tag CRIT">CRIT</div><div class="al-msg">SC-GREY: grey-market firmware backdoor fully activated</div></div>
+    <div class="aline"><div class="al-time">T+05:00</div><div class="al-tag SBOM">SBOM</div><div class="al-msg">Allied CSIRT: CycloneDX/SPDX format mismatch — joint triage blocked</div></div>
+    <div class="aline"><div class="al-time">T+03:30</div><div class="al-tag WARN">WARN</div><div class="al-msg">VRM: no SBOM contract obligations — SC triage impossible</div></div>
+    <div class="aline"><div class="al-time">T+02:00</div><div class="al-tag WARN">WARN</div><div class="al-msg">SC-CONC: HHI=0.74 — single-vendor exploit cascades 74% of comms</div></div>
+    <div class="aline"><div class="al-time">T+01:20</div><div class="al-tag SBOM">SBOM</div><div class="al-msg">SC-PATCH: temporal stressor at ceiling (47d/30d SLA) — KEV active</div></div>
+    <div class="aline"><div class="al-time">T+00:45</div><div class="al-tag CRIT">CRIT</div><div class="al-msg">SC-GREY: ICS firmware backdoor activation signal received</div></div>
+    <div class="aline"><div class="al-time">T+00:00</div><div class="al-tag INFO">INFO</div><div class="al-msg">MIRAGE CHAIN initialized · SolarWinds-class archetype · λ=0.15</div></div>
+  </div>
+
+</div><!-- end rpanel -->
+
+</div><!-- end shell -->
+
+<script>
+// ─── State ───
+const S = {
+  gifd:0.54, gswd:0.61, scts:0.88, psi:0.30, qds:0.21,
+  sbom:12, gcc:0.670,
+  wifd:0.25, wswd:0.40, wsc:0.25, lambda:0.15,
+  tick:36, mins:6, secs:0,
+  gov:38, selectedDocType:'tabletop'
+};
+
+// ─── Tab switching ───
+function switchTab(id,el) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ─── Weight change ───
+function weightChange(key,val) {
+  val = parseInt(val)/100;
+  if(key==='ifd')    { S.wifd=val; setEl('wv-ifd', '0.'+String(parseInt(val*100)).padStart(2,'0')); }
+  if(key==='swd')    { S.wswd=val; setEl('wv-swd', '0.'+String(parseInt(val*100)).padStart(2,'0')); }
+  if(key==='sc')     { S.wsc=val;  setEl('wv-sc',  '0.'+String(parseInt(val*100)).padStart(2,'0')); }
+  if(key==='lambda') { S.lambda=val; setEl('lambda-val','λ = '+val.toFixed(2)); }
+  recomputeGCC();
+}
+
+function recomputeGCC() {
+  const gcc = S.wifd*S.gifd + S.wswd*S.gswd + S.wsc*S.scts + S.lambda*S.gifd*S.gswd;
+  S.gcc = Math.round(gcc*1000)/1000;
+  setEl('v-gcc', S.gcc.toFixed(3)); setEl('gcc-live', S.gcc.toFixed(3)); setEl('gcc-display', S.gcc.toFixed(3));
+  setBar('b-gcc', S.gcc*100);
+  S.gov = Math.round((1-S.gcc)*100);
+  setEl('gov-n', S.gov);
+  const gc = S.gov<40?'var(--crit)':S.gov<60?'var(--high)':'var(--ok)';
+  document.getElementById('gov-n').style.color=gc;
+  const gs = S.gov<50?'BELOW STABILITY FLOOR (50)':S.gov<70?'APPROACHING STABILITY':'STABLE';
+  document.querySelector('.gov-status').textContent=gs;
+  document.querySelector('.gov-status').style.color=gc;
+}
+
+// ─── Node modal ───
+function nodeModal(title,body,l1,v1,l2,v2,l3,v3,l4,v4) {
+  document.getElementById('m-title').textContent=title;
+  document.getElementById('m-body').textContent=body;
+  document.getElementById('m-mets').innerHTML=[
+    [l1,v1],[l2,v2],[l3,v3],[l4,v4]
+  ].map(([l,v])=>`<div class="modal-met"><div class="mm-l">${l}</div><div class="mm-v">${v}</div></div>`).join('');
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
+
+// ─── Scenario loading ───
+const scenarios = [
+  {name:'MIRAGE CHAIN',wifd:0.25,wswd:0.40,wsc:0.30,l:0.15},
+  {name:'IRONCLAD SIEGE',wifd:0.55,wswd:0.20,wsc:0.15,l:0.10},
+  {name:'FRACTURE POINT',wifd:0.15,wswd:0.50,wsc:0.30,l:0.05},
+  {name:'PHANTOM CIRCUIT',wifd:0.40,wswd:0.25,wsc:0.25,l:0.20},
+  {name:'LOCKDOWN DELTA',wifd:0.45,wswd:0.25,wsc:0.20,l:0.10},
+];
+
+function loadScenario(i,el) {
+  document.querySelectorAll('.sc-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const sc=scenarios[i];
+  S.wifd=sc.wifd; S.wswd=sc.wswd; S.wsc=sc.wsc; S.lambda=sc.l;
+  document.getElementById('sl-ifd').value=sc.wifd*100;
+  document.getElementById('sl-swd').value=sc.wswd*100;
+  document.getElementById('sl-sc').value=sc.wsc*100;
+  document.getElementById('sl-lambda').value=sc.l*100;
+  setEl('wv-ifd',sc.wifd.toFixed(2)); setEl('wv-swd',sc.wswd.toFixed(2)); setEl('wv-sc',sc.wsc.toFixed(2));
+  setEl('lambda-val','λ = '+sc.l.toFixed(2));
+  recomputeGCC();
+  addLog('INFO',`Scenario loaded: ${sc.name} · w_IFD=${sc.wifd} w_SWD=${sc.wswd} λ=${sc.l}`);
+}
+
+// ─── Sim tick ───
+function advTick() {
+  S.tick++; S.secs+=10; if(S.secs>=60){S.secs-=60;S.mins++;}
+  const ts=`${String(S.mins).padStart(2,'0')}:${String(S.secs).padStart(2,'0')}`;
+  setEl('stk',String(S.tick).padStart(3,'0')); setEl('htick',String(S.tick).padStart(3,'0'));
+  setEl('selp',ts); setEl('hclock',ts);
+  drift('gifd',-0.008,'b-gifd','v-gifd'); drift('gswd',-0.010,'b-gswd','v-gswd');
+  drift('scts',0.008,'b-scts','v-scts');
+  drift('psi',-0.006,'b-psi','v-psi');
+  recomputeGCC();
+  const d = parseInt(document.getElementById('adv-s').textContent);
+  const f = parseInt(document.getElementById('def-s').textContent);
+  document.getElementById('adv-s').textContent=Math.min(99,d+1);
+  document.getElementById('def-s').textContent=Math.max(1,f+1);
+  addLog('INFO',`Tick ${S.tick} · g-GCC=${S.gcc.toFixed(3)} · Ψ_v2=${S.psi.toFixed(3)}`);
+}
+
+function drift(key,delta,bid,vid) {
+  S[key]=Math.max(0,Math.min(1,(S[key]||0.5)+delta+(Math.random()-0.5)*0.02));
+  const v=S[key];
+  const el=document.getElementById(vid);
+  const bar=document.getElementById(bid);
+  if(el) el.textContent=v.toFixed(3);
+  if(bar) bar.style.width=(v*100)+'%';
+  updatePsiLive();
+}
+
+function updatePsiLive(){
+  setEl('psi-live',S.psi.toFixed(3));
+  setEl('gcc-live',S.gcc.toFixed(3));
+}
+
+// ─── SCTL inject ───
+const sctlEvents=[
+  ['SBOM','SC-SBOM-COVGAP: new unsigned package found in ML inference dep tree'],
+  ['CRIT','SC-GREY: hw-crypto-module-5 identified as grey-market origin — quarantine'],
+  ['SBOM','SC-SBOM-FORMAT: vendor SBOM delivered in proprietary format — not machine-readable'],
+  ['WARN','SC-CONC: vendor B acquires vendor D — concentration HHI increases to 0.81'],
+  ['SBOM','SC-PATCH-EOL: 3 OT components at end-of-life with no available patch pathway'],
+  ['CRIT','SC-GREY-IMPL: implant exposure index elevated — SC-GREY-DETCT coverage insufficient'],
+];
+let seIdx=0;
+function injectSCTL(){const e=sctlEvents[seIdx%sctlEvents.length];addLog(e[0],e[1]);seIdx++;S.scts=Math.min(1,S.scts+0.03);recomputeGCC();}
+
+// ─── Patch action ───
+const patchActions=[
+  ['OK','SBOM-VIS: emergency SBOM generated for ML runtime — coverage 0%→68%'],
+  ['OK','SC-GREY: grey-market firmware quarantined; verified replacement installed'],
+  ['OK','SC-PATCH: critical CVE patched — PATCH-VEL: 47d→8d for this component'],
+  ['OK','SC-CONC: second-source vendor onboarded — HHI reduced 0.74→0.58'],
+];
+let pIdx=0;
+function patchAction(){
+  const p=patchActions[pIdx%patchActions.length];addLog(p[0],p[1]);pIdx++;
+  S.sbom=Math.min(100,S.sbom+10); S.scts=Math.max(0,S.scts-0.06);
+  S.psi=Math.min(1,S.psi+0.04); S.qds=Math.min(1,S.qds+0.04);
+  setEl('v-sbom',S.sbom+'%'); setBar('b-sbom',S.sbom);
+  recomputeGCC(); updateSCTIRing();
+}
+
+// ─── MARL step ───
+const marlMsgs=[
+  'π_A: SC-SBOM blindspot Q updated +0.02 — strategy reinforced · g-GCC-SWD +0.011',
+  'π_D Q-table: SBOM audit action value 0.41→0.54 — recommended option improving',
+  'λ nonlinear coupling fired: g-GCC-IFD × g-GCC-SWD = '+((S.gifd*S.gswd).toFixed(3))+' · Ψ_v2 penalty applied',
+  'BGC-ASI: domain-separation bonus ε=0.05 recoverable if IFD/SWD correctly separated this tick',
+  'Ψ_v2 component update: Q_sctl improving (+0.03) from vendor notification — SC-CONC-CONT active',
+];
+let mIdx=0;
+function marlStep(){addLog('MARL',marlMsgs[mIdx%marlMsgs.length]);mIdx++;S.psi=Math.min(1,S.psi+0.015);recomputeGCC();}
+
+// ─── Reset ───
+function resetSim(){
+  S.tick=1;S.mins=0;S.secs=0;S.gifd=0.12;S.gswd=0.10;S.scts=0.05;S.psi=0.78;S.qds=0.65;S.sbom=85;
+  setEl('stk','001');setEl('htick','001');setEl('selp','00:00');setEl('hclock','00:00');
+  ['gifd','gswd','scts','psi','qds'].forEach(k=>drift(k,0,'b-'+k,'v-'+k));
+  setEl('v-sbom','85%');setBar('b-sbom',85);
+  S.sbom=85; recomputeGCC(); updateSCTIRing();
+  document.getElementById('def-s').textContent='88';
+  document.getElementById('adv-s').textContent='6';
+  addLog('OK','Simulation reset · T+00:00 · All systems nominal · SBOM-VIS=85%');
+}
+
+// ─── SCTI ring ───
+function updateSCTIRing() {
+  const trust = 1-S.scts;
+  const circ=150.8, off = circ-(trust*circ);
+  document.getElementById('scti-ring').style.strokeDashoffset=off;
+  document.getElementById('scti-pct').textContent=Math.round(trust*100)+'%';
+  const col = trust<0.15?'var(--crit)':trust<0.4?'var(--high)':'var(--sctl)';
+  document.getElementById('scti-ring').style.stroke=col;
+}
+
+// ─── Playbook steps ───
+function toggleStep(el){el.querySelector('.pstep-chk').classList.toggle('done');}
+
+// ─── Doc type selection ───
+function selectDocType(el,type){
+  document.querySelectorAll('.doc-type-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  S.selectedDocType=type;
+}
+
+// ─── File upload handling ───
+function handleFiles(files) {
+  const list = document.getElementById('uploaded-list');
+  const results = document.getElementById('analysis-results');
+  Array.from(files).forEach(file => {
+    // Add to list
+    const item = document.createElement('div');
+    item.className='uploaded-item';
+    const ext = file.name.split('.').pop().toUpperCase();
+    const icon = {PDF:'📄',DOCX:'📝',DOC:'📝',XLSX:'📊',PPTX:'📑',TXT:'📃',JSON:'📋',CSV:'📊'}[ext]||'📁';
+    item.innerHTML=`
+      <div class="uploaded-icon">${icon}</div>
+      <div class="uploaded-name">${file.name}</div>
+      <div class="uploaded-meta">${(file.size/1024).toFixed(0)} KB · ${ext} · ${S.selectedDocType.toUpperCase()}</div>
+      <div class="uploaded-status-dot dot-analyzing" id="dot-${file.name.replace(/\W/g,'_')}"></div>
+    `;
+    list.appendChild(item);
+    addLog('INFO',`Document uploaded: ${file.name} · Type: ${S.selectedDocType} · Analyzing…`);
+
+    // Simulate analysis (after 1.8s)
+    setTimeout(()=>{
+      const dotId='dot-'+file.name.replace(/\W/g,'_');
+      const dot=document.getElementById(dotId);
+      if(dot){dot.className='uploaded-status-dot dot-ready';}
+      showAnalysis(file.name, S.selectedDocType, results);
+      addLog('OK',`Analysis complete: ${file.name} · Ψ_v2 alignment score computed`);
+    },1800);
+  });
+}
+
+function showAnalysis(filename, docType, container) {
+  const typeMap={
+    tabletop:{label:'TABLETOP EXERCISE',color:'var(--ifd)',bg:'var(--ifd-bg)'},
+    soc:{label:'SOC REPORT',color:'var(--swd)',bg:'var(--swd-bg)'},
+    dr:{label:'DR PROCEDURE',color:'var(--high)',bg:'#fef4ec'},
+    coop:{label:'COOP DOCUMENT',color:'var(--gov)',bg:'var(--gov-bg)'},
+    ir:{label:'IR PLAN',color:'var(--crit)',bg:'#fde8e7'},
+    policy:{label:'POLICY/GOVERNANCE',color:'var(--sctl)',bg:'var(--sctl-bg)'},
+  };
+  const t=typeMap[docType]||typeMap.policy;
+  const psi=(0.28+Math.random()*0.25).toFixed(2);
+  const findings=getFindings(docType);
+
+  const card=document.createElement('div');
+  card.className='analysis-card';
+  card.innerHTML=`
+    <div class="analysis-header">
+      <div class="analysis-doc-name">📎 ${filename}</div>
+      <span class="analysis-type-badge" style="background:${t.bg};color:${t.color};border:1px solid ${t.color}40">${t.label}</span>
+      <span class="rbadge ${parseFloat(psi)<0.4?'rb-crit':parseFloat(psi)<0.6?'rb-high':'rb-med'}">Ψ_v2 = ${psi}</span>
+    </div>
+    ${findings.map(f=>`
+      <div class="finding-row">
+        <div class="finding-domain"><span class="domain-badge ${f.db}">${f.domain}</span></div>
+        <div class="finding-text"><strong>${f.title}</strong> ${f.body}</div>
+        <div class="finding-metric" style="color:${f.mc}">${f.metric}</div>
+      </div>
+    `).join('')}
+  `;
+  container.insertBefore(card, container.firstChild);
+}
+
+function getFindings(docType) {
+  const byType={
+    tabletop:[
+      {db:'db-sctl',domain:'SCTL',title:'SC-SBOM stressor absent.',body:'Exercise does not model SBOM gap as a defender visibility constraint. Discovery time is optimistic by ×2.1 vs. E-AGCO-HT prediction.',mc:'var(--crit)',metric:'GAP · CRIT'},
+      {db:'db-ifd',domain:'IFD',title:'IFD/SWD conflation.',body:'No domain-separated injects. Q_domain_sep penalty reduces Ψ_v2 by ~0.10. Recommend adding OT-specific lane at minute 15.',mc:'var(--high)',metric:'Q_d_sep low'},
+      {db:'db-swd',domain:'SWD',title:'SC-PATCH not temporal.',body:'Vulnerability modeled as static flag. v2.0 SC-PATCH increases continuously from CVE publication — tabletop misses time-pressure escalation.',mc:'var(--high)',metric:'Temporal: absent'},
+    ],
+    soc:[
+      {db:'db-sctl',domain:'SCTL',title:'SBOM coverage not audited.',body:'SOC report does not include SBOM-VIS or SC-SBOM-COVGAP metrics. EO 14028 compliance gap. Recommend adding SBOM attestation to audit scope.',mc:'var(--crit)',metric:'SBOM: absent'},
+      {db:'db-swd',domain:'SWD',title:'SC-CONC-HHI not measured.',body:'Vendor concentration risk (HHI) not in scope. Single-vendor dependencies unquantified. Add SWD-DEP-CONC to continuous monitoring.',mc:'var(--high)',metric:'HHI: unmeasured'},
+      {db:'db-gov',domain:'GOV',title:'Q_sctl governance actions absent.',body:'Report does not address vendor notification obligations, SBOM disclosure SLAs, or grey-market procurement controls.',mc:'var(--med)',metric:'Q_sctl: 0.12'},
+    ],
+    dr:[
+      {db:'db-ifd',domain:'IFD',title:'OPS-RES RTO not SC-aware.',body:'DR procedures assume clean hardware available for failover. Grey-market component risk in recovery hardware not assessed. IFD-OPS-RTO may be unachievable.',mc:'var(--crit)',metric:'RTO: SC gap'},
+      {db:'db-swd',domain:'SWD',title:'SBOM not available for recovery.',body:'DR procedure cannot verify software integrity during recovery because SBOM is absent. Cannot confirm clean-state deployment.',mc:'var(--crit)',metric:'SBOM: missing'},
+      {db:'db-sctl',domain:'SCTL',title:'Vendor notification absent.',body:'DR plan has no vendor notification step for SC-compromised components. Q_sctl(vendor notification) = 0.',mc:'var(--high)',metric:'Q_sctl: 0'},
+    ],
+    coop:[
+      {db:'db-gov',domain:'GOV',title:'Essential functions not domain-partitioned.',body:'COOP essential functions list does not distinguish IFD (physical plant continuity) from SWD (software service continuity). Domain-separated continuity thresholds needed.',mc:'var(--high)',metric:'Q_domain_sep low'},
+      {db:'db-ifd',domain:'IFD',title:'Backup hardware provenance not verified.',body:'COOP alternate facilities use hardware of unknown provenance. SC-GREY risk in continuity infrastructure unaddressed.',mc:'var(--crit)',metric:'HW-PROV: absent'},
+      {db:'db-sctl',domain:'SCTL',title:'Alternate vendor list absent.',body:'COOP does not identify alternate supply sources for critical components. SC-CONC-ALTN: 0. Single-vendor concentration persists in continuity posture.',mc:'var(--high)',metric:'SC-CONC-ALTN: 0'},
+    ],
+    ir:[
+      {db:'db-swd',domain:'SWD',title:'SBOM not used for scoping.',body:'IR plan does not instruct analysts to generate or consult SBOM during initial triage. Component-affected system identification takes 3× longer without SBOM.',mc:'var(--crit)',metric:'Triage: 3× slow'},
+      {db:'db-ifd',domain:'IFD',title:'IFD/SWD escalation chains not separated.',body:'Single escalation chain for all technical incidents. v2.0 requires separate chains: IFD → physical/OT response (α=0.20), SWD → pipeline response (α=0.50).',mc:'var(--high)',metric:'Q_domain_sep: 0.18'},
+      {db:'db-sctl',domain:'SCTL',title:'Cross-border SBOM sharing not planned.',body:'Plan does not address SBOM format for allied CSIRT sharing. CycloneDX recommended for interoperability per FIRST guidelines.',mc:'var(--med)',metric:'Format: absent'},
+    ],
+    policy:[
+      {db:'db-sctl',domain:'SCTL',title:'SBOM delivery not mandated in contracts.',body:'Policy does not require SBOM delivery from software vendors. Core enforcement gap for SC-SBOM stressor mitigation. EO 14028 / CRA alignment recommended.',mc:'var(--crit)',metric:'SBOM mandate: 0'},
+      {db:'db-gov',domain:'GOV',title:'Win-win design opportunity.',body:'Policy lacks risk-tiered timelines. Phased SBOM mandates by criticality tier reduce innovation-burden narrative, improve cultural acceptance index from 0.42→0.71.',mc:'var(--med)',metric:'Cultural: +0.29'},
+      {db:'db-swd',domain:'SWD',title:'HHI threshold not defined.',body:'No vendor concentration limit specified. Recommend SC-CONC-HHI > 0.30 as procurement review trigger.',mc:'var(--high)',metric:'SC-CONC: untriggered'},
+    ],
+  };
+  return byType[docType]||byType.policy;
+}
+
+// ─── Helpers ───
+function setEl(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+function setBar(id,v){const e=document.getElementById(id);if(e)e.style.width=v+'%';}
+
+function addLog(tag,msg){
+  const f=document.getElementById('afeed');
+  const ts=`T+${String(S.mins).padStart(2,'0')}:${String(S.secs).padStart(2,'0')}`;
+  const el=document.createElement('div');
+  el.className='aline';
+  el.innerHTML=`<div class="al-time">${ts}</div><div class="al-tag ${tag}">${tag}</div><div class="al-msg">${msg}</div>`;
+  f.insertBefore(el,f.firstChild);
+}
+
+// ─── Init ───
+updateSCTIRing();
+recomputeGCC();
+</script>
+</body>
+</html>
