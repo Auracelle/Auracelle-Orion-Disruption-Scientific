@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it."
+title: "Auracelle Orion v3 — E-AGCO-HT v2.0 (Scientific Instrument Edition)"
+authors:
+  - family-names: "Evans"
+    given-names: "Grace-Alice"
+date-released: "2026-03-02"
+type: software
+license: MIT
+repository-code: "https://github.com/<your-org-or-user>/auracelle-orion-v3-e-agco-ht-scientific-instrument"
+abstract: >
+  Auracelle Orion v3 is an interactive HTML prototype for cyber disruption and escalation governance wargaming,
+  featuring a domain-partitioned propagation model (IFD/SWD/SCTL/GOV), decision workflow lanes, and
+  structured after-action reflection under an E-AGCO-HT framing.
